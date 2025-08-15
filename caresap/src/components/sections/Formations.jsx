@@ -54,7 +54,7 @@ const Formations = () => {
                             </div>
 
                             {/* Contenu de la carte */}
-                            <div className="p-6 flex flex-col justify-between h-32">
+                            <div className=" flex flex-col justify-between m-2">
                                 <div>
                                     <h3 className="text-2xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors duration-300">
                                         {collection.title}
@@ -65,10 +65,11 @@ const Formations = () => {
                                 </div>
                                 
                                 {/* Flèche d'indication */}
-                                <div className="flex justify-end">
-                                    <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center group-hover:bg-blue-600 transition-colors duration-300">
-                                        <ArrowRight size={16} className="text-white" />
-                                    </div>
+                                <div className="mt-4">
+                                    <button className="flex items-center text-blue-600 font-semibold group-hover:text-blue-800 transition-colors duration-300">
+                                        Voir plus
+                                        <ArrowRight size={16} className="ml-2 transform group-hover:translate-x-1 transition-transform duration-300" />
+                                    </button>
                                 </div>
                             </div>
                         </Link>

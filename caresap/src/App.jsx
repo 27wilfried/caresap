@@ -10,6 +10,12 @@ import AboutPage from './components/pages/AboutPage';
 import Contact from './components/pages/ContactPage'; 
 import BlogPage from './components/pages/BlogPage'; 
 import BlogDetailPage from './components/pages/BlogDetailPage';
+import DashboardPage from './components/Dashboard/DashboarddPage';
+import AuthPage from './components/pages/auth/AuthPage'; 
+
+// Importez le nouveau composant de la page du panier
+import CartPage from './components/Cart/CartPage';
+
 import Footer from './components/sections/Footer';
 import Navbar from './components/sections/Navbar';
 
@@ -31,6 +37,12 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/blog/:id" element={<BlogDetailPage />} />
+          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/auth" element={<AuthPage />} /> 
+          
+          {/* Nouvelle route pour la page du panier */}
+          <Route path="/panier" element={<CartPage />} />
+
           <Route path="*" element={
             <div className="min-h-screen bg-gray-50 flex items-center justify-center">
               <div className="text-center">

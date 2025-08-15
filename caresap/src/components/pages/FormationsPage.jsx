@@ -271,8 +271,8 @@ const FormationsPage = () => {
                                                 to={`/formations/${collectionInfo?.slug}/${product.slug}`}
                                                 className="inline-flex items-center px-4 py-2.5 text-white bg-primary rounded-xl font-medium text-sm hover:shadow-lg hover:shadow-blue-500/25 transition-all duration-300 group/btn transform hover:scale-105"
                                             >
-                                                Acheter
-                                                <ShoppingCart size={16} className="ml-2 transition-transform duration-300 group-hover/btn:scale-110" />
+                                               Voir 
+                                                <ArrowRight size={16} className="ml-2 transition-transform duration-300" />
                                             </Link>
                                         </div>
                                     </div>

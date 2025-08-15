@@ -1,6 +1,8 @@
 // src/components/sections/HeroSection.jsx
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
+
 
 const HeroSection = () => {
   return (
@@ -25,13 +27,13 @@ const HeroSection = () => {
 
         {/* Boutons */}
         <div className="flex flex-col sm:flex-row justify-center gap-4">
-          <button className="px-6 py-3 bg-primary text-white rounded-full font-medium hover:bg-primary/90 transition">
+          <Link   to="/contact"  className="px-6 py-3 bg-primary text-white rounded-full font-medium hover:bg-primary/90 transition">
             Nous contacter
-          </button>
-          <button className="px-6 py-3 text-primary rounded-full font-medium flex items-center justify-center gap-2 hover:bg-primary transition">
-            <span>Découvrir nos solutions</span>
+          </Link>
+          <Link to="formations" className="px-6 py-3 text-primary rounded-full font-medium flex items-center justify-center gap-2 hover:bg-primary transition">
+            <span>Découvrir nos formations</span>
             <ArrowRight size={18} />
-          </button>
+          </Link>
         </div>
       </div>
     </section>

@@ -1,19 +1,22 @@
-// src/components/pages/ProductDetailPage.jsx
 import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { getProductBySlug, getBadgeConfig, getFeaturedProducts } from '../../data/formation';
+// Importez le hook personnalisé pour le panier
+import { useCart } from '../contexts/CartContext';
 
 const ProductDetailPage = () => {
   const { collectionSlug, productSlug } = useParams();
   
-  const [cart, setCart] = useState([]);
+  // Utilisez le hook useCart pour accéder aux fonctions du panier
+  const { addToCart } = useCart();
   const [notification, setNotification] = useState(null);
 
   const product = getProductBySlug(collectionSlug, productSlug);
   const recommendedProducts = getFeaturedProducts(4);
 
+  // Remplacez la fonction locale par celle du contexte
   const handleAddToCart = (item) => {
-    setCart(prevCart => [...prevCart, item]);
+    addToCart(item);
     setNotification(`${item.name} a été ajouté au panier !`);
     setTimeout(() => setNotification(null), 3000);
   };
@@ -130,9 +133,6 @@ const ProductDetailPage = () => {
                 className="flex-1 px-8 py-4 bg-blue-600 text-white font-bold rounded-xl shadow-lg hover:bg-blue-700 transition-colors duration-300 transform hover:-translate-y-1"
               >
                 Ajouter au panier
-              </button>
-              <button className="flex-1 px-8 py-4 bg-gray-100 text-gray-800 font-bold rounded-xl hover:bg-gray-200 transition-colors duration-300">
-                Ajouter aux favoris
               </button>
             </div>
 

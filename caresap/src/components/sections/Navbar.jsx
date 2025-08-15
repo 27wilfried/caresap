@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, X, ShoppingCart } from 'lucide-react';
+// Importez le hook personnalisé pour le panier
+import { useCart } from '../contexts/CartContext';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  // Utilisez le hook useCart pour obtenir le nombre total d'articles
+  const { totalItems } = useCart();
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -42,7 +46,13 @@ const Navbar = () => {
           {/* Icône Panier */}
           <Link to="/panier" className="relative text-gray-600 hover:text-blue-500">
             <ShoppingCart size={24} />
-            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">0</span>
+            {/* Affichez le nombre total d'articles */}
+            {totalItems > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center animate-ping"></span>
+            )}
+            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                {totalItems}
+            </span>
           </Link>
         </nav>
 
@@ -50,7 +60,13 @@ const Navbar = () => {
         <div className="md:hidden flex items-center space-x-4">
           <Link to="/panier" className="relative text-gray-600 hover:text-blue-500">
             <ShoppingCart size={24} />
-            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">0</span>
+            {/* Affichez le nombre total d'articles */}
+            {totalItems > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center animate-ping"></span>
+            )}
+            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                {totalItems}
+            </span>
           </Link>
           <button onClick={toggleMenu} className="text-gray-600 focus:outline-none">
             {isOpen ? <X size={28} /> : <Menu size={28} />}

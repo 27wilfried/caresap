@@ -10,7 +10,6 @@ const services = [
         conditions: "Disposer d’un protocole ou d’un cahier des charges (CaRESaP peut l’élaborer si nécessaire) ; accès au terrain et autorisations administratives.",
         procedure: "Envoyer un e-mail à contact@caresap.org ou remplir le formulaire en bas de page.",
         period: "6 à 12 semaines selon l’ampleur de l’étude (option express disponible).",
-        cta: "Prêt à lancer votre étude ? Complétez le formulaire dès maintenant.",
         slug: "conception-et-realisation-etudes-epidemiologiques"
     },
     {
@@ -22,7 +21,6 @@ const services = [
         conditions: "Accès aux documents du programme, aux données existantes et aux parties prenantes.",
         procedure: "Contactez-nous via contact@caresap.org ou le formulaire en bas de page.",
         period: "4 à 10 semaines (possibilité express).",
-        cta: "Demandez votre évaluation aujourd’hui via notre formulaire.",
         slug: "evaluation-de-programmes"
     },
     {
@@ -34,7 +32,6 @@ const services = [
         conditions: "Fournir les données brutes et la description des variables ; confidentialité garantie.",
         procedure: "Écrivez à contact@caresap.org ou utilisez le formulaire ci-dessous.",
         period: "2 à 6 semaines (service express possible).",
-        cta: "Confiez-nous vos données dès aujourd’hui via le formulaire.",
         slug: "analyses-statistiques-biostatistiques"
     },
     {
@@ -46,7 +43,6 @@ const services = [
         conditions: "Inscription préalable ; groupes de 5 participants minimum (ou individuel sur demande).",
         procedure: "Inscrivez-vous via contact@caresap.org ou formulaire ci-dessous.",
         period: "1 à 4 semaines selon le module (option express pour sessions intensives).",
-        cta: "Réservez votre place à la prochaine formation via notre formulaire.",
         slug: "formation-et-renforcement-de-capacites"
     },
     {
@@ -58,7 +54,6 @@ const services = [
         conditions: "Projet clairement défini ou problématique à résoudre ; accords de confidentialité signés.",
         procedure: "Écrivez à contact@caresap.org ou utilisez le formulaire en bas.",
         period: "8 à 16 semaines (option express possible).",
-        cta: "Donnez vie à votre idée innovante via notre formulaire.",
         slug: "recherche-operationnelle-innovation"
     },
     {
@@ -70,7 +65,6 @@ const services = [
         conditions: "Mandat clair et documents de référence disponibles.",
         procedure: "Contactez-nous à contact@caresap.org ou via le formulaire ci-dessous.",
         period: "2 à 8 semaines (option express disponible).",
-        cta: "Sollicitez notre expertise via le formulaire.",
         slug: "appui-technique-conseil-scientifique"
     },
     {
@@ -82,7 +76,6 @@ const services = [
         conditions: "Fournir données ou résultats à diffuser ; respect des droits d’auteurs.",
         procedure: "Envoyez votre projet à contact@caresap.org ou remplissez le formulaire ci-dessous.",
         period: "2 à 5 semaines (option express possible).",
-        cta: "Faites connaître vos résultats via notre formulaire.",
         slug: "communication-scientifique"
     },
     {
@@ -94,7 +87,6 @@ const services = [
         conditions: "Sujet ou thématique clairement défini ; accès éventuel à certaines bases payantes.",
         procedure: "Contactez contact@caresap.org ou remplissez le formulaire ci-dessous.",
         period: "1 à 3 semaines (option express possible).",
-        cta: "Recevez rapidement votre veille en remplissant le formulaire.",
         slug: "veille-sanitaire-recherche-documentaire"
     }
 ];

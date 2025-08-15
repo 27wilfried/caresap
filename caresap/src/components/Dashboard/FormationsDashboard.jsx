@@ -1,0 +1,113 @@
+import React from 'react';
+import { Laptop } from 'lucide-react';
+import { useContentManager } from '../hooks/useContentManager';
+import CollectionForm from '../Forms/CollectionForm';
+import ProductForm from '../Forms/ProductForm';
+import CollectionsList from './CollectionsList';
+import ProductsList from './ProductsList';
+
+const FormationsDashboard = () => {
+  const {
+    collections,
+    products,
+    currentView,
+    selectedCollectionId,
+    editingItem,
+    uploadedImage,
+    uploadedMedia,
+    setCurrentView,
+    setSelectedCollectionId,
+    setEditingItem,
+    handleBackToCollections,
+    handleAddCollection,
+    handleUpdateCollection,
+    handleDeleteCollection,
+    handleAddProduct,
+    handleUpdateProduct,
+    handleDeleteProduct,
+    onImageUpload,
+    onImageRemove,
+    onMediaUpload,
+    onMediaRemove,
+  } = useContentManager();
+
+  const handleSelectCollection = (id) => {
+    setSelectedCollectionId(id);
+    setCurrentView('products');
+  };
+
+  const selectedCollection = collections.find(c => c.id === selectedCollectionId);
+  const productsForSelectedCollection = products.filter(p => p.collectionId === selectedCollectionId);
+
+  const renderContent = () => {
+    if (editingItem) {
+      if (editingItem.collectionId) {
+        // Formulaire pour un produit
+        return (
+          <ProductForm
+            initialData={editingItem}
+            onSave={handleUpdateProduct}
+            onCancel={() => setEditingItem(null)}
+            uploadedImage={uploadedImage}
+            onImageUpload={onImageUpload}
+            onImageRemove={onImageRemove}
+            uploadedMedia={uploadedMedia}
+            onMediaUpload={onMediaUpload}
+            onMediaRemove={onMediaRemove}
+            collections={collections}
+          />
+        );
+      } else {
+        // Formulaire pour une collection
+        return (
+          <CollectionForm
+            initialData={editingItem}
+            onSave={handleUpdateCollection}
+            onCancel={() => setEditingItem(null)}
+            uploadedImage={uploadedImage}
+            onImageUpload={onImageUpload}
+            onImageRemove={onImageRemove}
+          />
+        );
+      }
+    }
+
+    if (currentView === 'collections') {
+      return (
+        <CollectionsList
+          collections={collections}
+          onSelectCollection={handleSelectCollection}
+          onEdit={setEditingItem}
+          onDelete={handleDeleteCollection}
+          onAddNew={() => setEditingItem({})}
+        />
+      );
+    }
+
+    if (currentView === 'products' && selectedCollection) {
+      return (
+        <ProductsList
+          products={productsForSelectedCollection}
+          collection={selectedCollection}
+          onBack={handleBackToCollections}
+          onEdit={setEditingItem}
+          onDelete={handleDeleteProduct}
+          onAddNew={() => setEditingItem({ collectionId: selectedCollectionId })}
+        />
+      );
+    }
+
+    return null; // ou un composant d'erreur/vide
+  };
+
+  return (
+    <div className="p-10 bg-gray-50 min-h-screen">
+      <h1 className="text-4xl font-extrabold text-gray-800 mb-6 flex items-center">
+       
+      </h1>
+      {renderContent()}
+    </div>
+  );
+};
+
+export default FormationsDashboard;
