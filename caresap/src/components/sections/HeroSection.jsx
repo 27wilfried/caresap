@@ -30,8 +30,8 @@ const HeroSection = () => {
           <Link   to="/contact"  className="px-6 py-3 bg-primary text-white rounded-full font-medium hover:bg-primary/90 transition">
             Nous contacter
           </Link>
-          <Link to="formations" className="px-6 py-3 text-primary rounded-full font-medium flex items-center justify-center gap-2 hover:bg-primary transition">
-            <span>Découvrir nos formations</span>
+          <Link to="formations" className="px-6 py-3 text-primary rounded-full font-bold flex items-center justify-center gap-2 hover:bg-primary transition">
+            <span>Découvrir nos produits</span>
             <ArrowRight size={18} />
           </Link>
         </div>

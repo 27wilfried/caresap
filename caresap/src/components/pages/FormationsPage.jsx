@@ -3,52 +3,28 @@ import { Link, useParams } from 'react-router-dom';
 import { products, collections } from '../../data/formation';
 import {
     ArrowRight,
-    ShoppingCart,
-    Filter,
     Search,
     SlidersHorizontal,
     Grid3X3,
     List,
     ChevronDown,
-    Laptop,
-    Book,
-    Clipboard,
-    FileText
 } from 'lucide-react';
 
 const FormationsPage = () => {
     const { collectionSlug } = useParams();
-    const [activeCollectionId, setActiveCollectionId] = useState('tous');
     const [searchTerm, setSearchTerm] = useState('');
     const [sortBy, setSortBy] = useState('name');
     const [viewMode, setViewMode] = useState('grid');
     const [showFilters, setShowFilters] = useState(false);
     const [priceRange, setPriceRange] = useState([0, 1000]);
 
-    useEffect(() => {
-        if (collectionSlug) {
-            const foundCollection = collections.find(c => c.slug === collectionSlug);
-            setActiveCollectionId(foundCollection ? foundCollection.id : 'tous');
-        } else {
-            setActiveCollectionId('tous');
-        }
-    }, [collectionSlug]);
+    const getCollectionInfo = (id) => collections.find(c => c.id === id);
 
+    // Filter and sort products based on search, price range, and sort order
     const filteredAndSortedProducts = useMemo(() => {
-        let filtered = products;
-
-        if (activeCollectionId !== 'tous') {
-            filtered = filtered.filter(p => p.collectionId === activeCollectionId);
-        }
-
-        if (searchTerm) {
-            filtered = filtered.filter(p =>
-                p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                p.description.toLowerCase().includes(searchTerm.toLowerCase())
-            );
-        }
-
-        filtered = filtered.filter(p =>
+        let filtered = products.filter(p =>
+            (p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            p.description.toLowerCase().includes(searchTerm.toLowerCase())) &&
             p.price >= priceRange[0] && p.price <= priceRange[1]
         );
 
@@ -62,26 +38,38 @@ const FormationsPage = () => {
             default:
                 return filtered;
         }
-    }, [activeCollectionId, searchTerm, sortBy, priceRange]);
+    }, [searchTerm, sortBy, priceRange]);
 
-    const getCollectionInfo = (id) => collections.find(c => c.id === id);
+    // Group products by collection for display
+    const groupedProducts = useMemo(() => {
+        const groups = collections.map(collection => {
+            const items = filteredAndSortedProducts.filter(p => p.collectionId === collection.id);
+            return {
+                ...collection,
+                items,
+            };
+        });
+
+        // Optional: filter out collections that have no products after filtering
+        return groups.filter(group => group.items.length > 0);
+    }, [filteredAndSortedProducts, collections]);
 
     return (
         <div className="bg-gradient-to-br from-gray-50 via-white to-blue-50/20 min-h-screen">
             <div className="container mx-auto px-4 sm:px-6 py-12">
                 <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8">
                     <h1 className="text-4xl font-bold text-gray-900 leading-tight mb-4 lg:mb-0">
-                        Découvrez nos ressources
+                       Boutique
                     </h1>
                     <p className="text-lg text-gray-600">
                         Formations, livres, supports et articles pour les professionnels de la santé publique.
                     </p>
                 </div>
 
-                {/* Barre de contrôle (Recherche, Tri, Affichage) */}
+                {/* Control bar (Search, Sort, View Mode) */}
                 <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-8">
                     <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
-                        {/* Barre de recherche */}
+                        {/* Search bar */}
                         <div className="relative flex-grow md:mr-4">
                             <Search size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                             <input
@@ -93,7 +81,7 @@ const FormationsPage = () => {
                             />
                         </div>
 
-                        {/* Bouton pour afficher les filtres étendus (mobile) */}
+                        {/* Button for extended filters (mobile) */}
                         <button
                             onClick={() => setShowFilters(!showFilters)}
                             className="inline-flex items-center justify-center md:hidden px-4 py-2.5 text-sm font-medium rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors"
@@ -103,9 +91,9 @@ const FormationsPage = () => {
                             <ChevronDown size={16} className={`ml-2 transform transition-transform ${showFilters ? 'rotate-180' : 'rotate-0'}`} />
                         </button>
 
-                        {/* Tri et affichage (desktop) */}
+                        {/* Sort and view mode (desktop) */}
                         <div className="hidden md:flex items-center space-x-4">
-                            {/* Tri */}
+                            {/* Sort */}
                             <div className="relative">
                                 <select
                                     value={sortBy}
@@ -120,7 +108,7 @@ const FormationsPage = () => {
                                     <ChevronDown size={16} />
                                 </div>
                             </div>
-                            {/* Affichage */}
+                            {/* View mode */}
                             <div className="flex space-x-2">
                                 <button
                                     onClick={() => setViewMode('grid')}
@@ -141,43 +129,11 @@ const FormationsPage = () => {
                     </div>
                 </div>
 
-                {/* Filtres étendus (desktop et mobile) */}
+                {/* Extended filters (desktop and mobile) */}
                 {showFilters && (
                     <div className="mt-6 pt-6 border-t border-gray-100">
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {/* Filtres par collection */}
-                            <div>
-                                <h3 className="font-semibold text-gray-900 mb-3">Collections</h3>
-                                <div className="space-y-2">
-                                    <label className="flex items-center">
-                                        <input
-                                            type="radio"
-                                            name="collection"
-                                            checked={activeCollectionId === 'tous'}
-                                            onChange={() => setActiveCollectionId('tous')}
-                                            className="text-primary focus:ring-primary/20"
-                                        />
-                                        <span className="ml-2 text-gray-700">Tous les produits ({products.length})</span>
-                                    </label>
-                                    {collections.map((collection) => {
-                                        const count = products.filter(p => p.collectionId === collection.id).length;
-                                        return (
-                                            <label key={collection.id} className="flex items-center">
-                                                <input
-                                                    type="radio"
-                                                    name="collection"
-                                                    checked={activeCollectionId === collection.id}
-                                                    onChange={() => setActiveCollectionId(collection.id)}
-                                                    className="text-primary focus:ring-primary/20"
-                                                />
-                                                <span className="ml-2 text-gray-700 capitalize">{collection.title} ({count})</span>
-                                            </label>
-                                        );
-                                    })}
-                                </div>
-                            </div>
-
-                            {/* Filtre par prix */}
+                            {/* Price filter */}
                             <div>
                                 <h3 className="font-semibold text-gray-900 mb-3">Prix</h3>
                                 <div className="flex items-center gap-3">
@@ -204,82 +160,86 @@ const FormationsPage = () => {
                 )}
             </div>
 
-            {/* Grille de produits */}
+            {/* Display by collections */}
             <div className="container mx-auto px-4 sm:px-6">
-                {filteredAndSortedProducts.length > 0 ? (
-                    <div className={`grid gap-6 ${viewMode === 'grid'
-                        ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
-                        : 'grid-cols-1'
-                        }`}>
-                        {filteredAndSortedProducts.map((product) => {
-                            const collectionInfo = getCollectionInfo(product.collectionId);
-                            const Icon = collectionInfo?.icon;
-                            
-                            return (
-                                <div
-                                    key={product.id}
-                                    className={`group bg-white rounded-2xl shadow-sm border border-gray-100 transition-all duration-300 transform hover:shadow-xl hover:scale-[1.02] hover:-translate-y-1 overflow-hidden ${
-                                        viewMode === 'list' ? 'flex flex-row items-center p-4' : 'flex flex-col'
-                                    }`}
-                                >
-                                    {/* Image et Badges */}
-                                    <div className={`relative overflow-hidden ${viewMode === 'list' ? 'w-48 flex-shrink-0 rounded-xl' : 'rounded-t-2xl'}`}>
-                                        <img
-                                            src={product.image}
-                                            alt={product.name}
-                                            className={`object-cover transition-transform duration-500 group-hover:scale-110 ${
-                                                viewMode === 'list' ? 'w-full h-32' : 'w-full h-48'
-                                            }`}
-                                        />
-                                        <div className="absolute top-3 left-3 flex flex-wrap gap-2">
-                                            {product.badges && product.badges.map((badge, index) => (
-                                                <span
-                                                    key={index}
-                                                    className={`px-3 py-1 text-xs font-semibold rounded-full text-white ${badge.color}`}
-                                                >
-                                                    {badge.label}
-                                                </span>
-                                            ))}
-                                        </div>
-                                    </div>
-                                    
-                                    {/* Contenu */}
-                                    <div className={`p-6 flex flex-col flex-grow ${viewMode === 'list' ? 'pl-8' : ''}`}>
-                                        <div className="flex items-start gap-3 mb-3">
-                                            <div className="flex-shrink-0 w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center">
-                                                {Icon && <Icon size={20} className="text-primary" />}
-                                            </div>
-                                            <h3 className="text-xl font-bold text-gray-900 leading-tight flex-grow">
-                                                {product.name}
-                                            </h3>
-                                        </div>
-                                        
-                                        <p className="text-gray-600 leading-relaxed text-sm mb-4 flex-grow">
-                                            {product.shortDescription}
-                                        </p>
-                                        
-                                        <div className="mt-auto pt-4 border-t border-gray-100/50 flex items-center justify-between">
-                                            <div className="flex flex-col">
-                                                <span className="text-2xl font-bold text-gray-900">
-                                                    {product.price} €
-                                                </span>
-                                                <span className="text-xs text-gray-500 capitalize">
-                                                    {collectionInfo?.title}
-                                                </span>
-                                            </div>
-                                            <Link
-                                                to={`/formations/${collectionInfo?.slug}/${product.slug}`}
-                                                className="inline-flex items-center px-4 py-2.5 text-white bg-primary rounded-xl font-medium text-sm hover:shadow-lg hover:shadow-blue-500/25 transition-all duration-300 group/btn transform hover:scale-105"
-                                            >
-                                               Voir 
-                                                <ArrowRight size={16} className="ml-2 transition-transform duration-300" />
-                                            </Link>
-                                        </div>
-                                    </div>
+                {groupedProducts.length > 0 ? (
+                    groupedProducts.map((collection) => (
+                        <div key={collection.id} className="mb-12">
+                            <div className="flex items-center mb-6">
+                                <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mr-4">
+                                    {collection.icon && <collection.icon size={24} className="text-primary" />}
                                 </div>
-                            );
-                        })}
-                    </div>
+                                <h2 className="text-3xl font-bold text-gray-900">{collection.title}</h2>
+                            </div>
+                            <div className={`grid gap-6 ${viewMode === 'grid'
+                                ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
+                                : 'grid-cols-1'
+                                }`}>
+                                {collection.items.map((product) => {
+                                    return (
+                                        <div
+                                            key={product.id}
+                                            className={`group bg-white rounded-2xl shadow-sm border border-gray-100 transition-all duration-300 transform hover:shadow-xl hover:scale-[1.02] hover:-translate-y-1 overflow-hidden ${
+                                                viewMode === 'list' ? 'flex flex-row items-center p-4' : 'flex flex-col'
+                                            }`}
+                                        >
+                                            {/* Image and Badges */}
+                                            <div className={`relative overflow-hidden ${viewMode === 'list' ? 'w-48 flex-shrink-0 rounded-xl' : 'rounded-t-2xl'}`}>
+                                                <img
+                                                    src={product.image}
+                                                    alt={product.name}
+                                                    className={`object-cover transition-transform duration-500 group-hover:scale-110 ${
+                                                        viewMode === 'list' ? 'w-full h-32' : 'w-full h-48'
+                                                    }`}
+                                                />
+                                                <div className="absolute top-3 left-3 flex flex-wrap gap-2">
+                                                    {product.badges && product.badges.map((badge, index) => (
+                                                        <span
+                                                            key={index}
+                                                            className={`px-3 py-1 text-xs font-semibold rounded-full text-white ${badge.color}`}
+                                                        >
+                                                            {badge.label}
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                            
+                                            {/* Content */}
+                                            <div className={`p-6 flex flex-col flex-grow ${viewMode === 'list' ? 'pl-8' : ''}`}>
+                                                <div className="flex items-start gap-3 mb-3">
+                                                    <h3 className="text-xl font-bold text-gray-900 leading-tight flex-grow">
+                                                        {product.name}
+                                                    </h3>
+                                                </div>
+                                                
+                                                <p className="text-gray-600 leading-relaxed text-sm mb-4 flex-grow">
+                                                    {product.shortDescription}
+                                                </p>
+                                                
+                                                <div className="mt-auto pt-4 border-t border-gray-100/50 flex items-center justify-between">
+                                                    <div className="flex flex-col">
+                                                        <span className="text-2xl font-bold text-gray-900">
+                                                            {product.price} €
+                                                        </span>
+                                                        <span className="text-xs text-gray-500 capitalize">
+                                                            {collection.title}
+                                                        </span>
+                                                    </div>
+                                                    <Link
+                                                        to={`/formations/${collection.slug}/${product.slug}`}
+                                                        className="inline-flex items-center px-4 py-2.5 text-white bg-primary rounded-xl font-medium text-sm hover:shadow-lg hover:shadow-blue-500/25 transition-all duration-300 group/btn transform hover:scale-105"
+                                                    >
+                                                        Voir 
+                                                        <ArrowRight size={16} className="ml-2 transition-transform duration-300" />
+                                                    </Link>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    ))
                 ) : (
                     <div className="text-center py-16">
                         <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -292,7 +252,6 @@ const FormationsPage = () => {
                         <button
                             onClick={() => {
                                 setSearchTerm('');
-                                setActiveCollectionId('tous');
                                 setPriceRange([0, 1000]);
                             }}
                             className="inline-flex items-center px-6 py-3 text-primary border border-primary rounded-xl hover:bg-primary hover:text-white transition-colors"

@@ -65,9 +65,9 @@ const Formations = () => {
                                 </div>
                                 
                                 {/* Flèche d'indication */}
-                                <div className="mt-4">
+                                <div className="">
                                     <button className="flex items-center text-blue-600 font-semibold group-hover:text-blue-800 transition-colors duration-300">
-                                        Voir plus
+                                        Découvrir
                                         <ArrowRight size={16} className="ml-2 transform group-hover:translate-x-1 transition-transform duration-300" />
                                     </button>
                                 </div>
