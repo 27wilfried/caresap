@@ -76,9 +76,17 @@ const OrdersDashboard = () => {
     setSelectedOrder(null);
   };
 
+  // Fonction pour gérer le téléchargement de la facture
+  const handleDownloadInvoice = () => {
+    // Dans une application réelle, cette fonction appellerait une API pour générer une facture PDF
+    // et la téléchargerait. Pour l'exemple, nous allons simplement afficher un message.
+    console.log(`Téléchargement de la facture pour la commande #${selectedOrder.id}...`);
+    // Implémentez ici la logique de téléchargement du fichier
+  };
+
   return (
     <>
-      <div className="bg-white rounded-2xl p-6 sm:p-8 mb-10">
+      <div className="bg-white rounded-2xl shadow-lg p-6 sm:p-8 mb-10">
         <h2 className="text-2xl font-bold text-gray-800 mb-6">
           Historique des commandes
         </h2>
@@ -98,7 +106,6 @@ const OrdersDashboard = () => {
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Total
                 </th>
-               
                 <th scope="col" className="px-6 py-3"></th>
               </tr>
             </thead>
@@ -160,6 +167,14 @@ const OrdersDashboard = () => {
                   </li>
                 ))}
               </ul>
+            </div>
+            <div className="mt-8 flex justify-end">
+              <button
+                onClick={handleDownloadInvoice}
+                className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg shadow-md transition-colors"
+              >
+                Télécharger la facture
+              </button>
             </div>
           </div>
         </div>
