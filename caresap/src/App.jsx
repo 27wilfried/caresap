@@ -12,6 +12,7 @@ import BlogPage from './components/pages/BlogPage';
 import BlogDetailPage from './components/pages/BlogDetailPage';
 import DashboardPage from './components/Dashboard/DashboarddPage';
 import AuthPage from './components/pages/auth/AuthPage'; 
+import UserDashboard from './components/UserDashboard/UserDashboard'
 
 // Importez le nouveau composant de la page du panier
 import CartPage from './components/Cart/CartPage';
@@ -38,6 +39,7 @@ function App() {
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/blog/:id" element={<BlogDetailPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/user-dashboard" element={<UserDashboard />} />
           <Route path="/auth" element={<AuthPage />} /> 
           
           {/* Nouvelle route pour la page du panier */}
