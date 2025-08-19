@@ -4,6 +4,7 @@ import HomePage from './components/pages/HomePage';
 import ServiceDetailPage from './components/pages/ServiceDetailPage';
 import ServicesPage from './components/pages/ServicesPage'; 
 import FormationsPage from './components/pages/FormationsPage';
+import CollectionPage  from './components/pages/CollectionPage';
 import ProductDetailPage from './components/pages/ProductDetailPage'; 
 import PaymentPage from './components/pages/PaymentPage';
 import AboutPage from './components/pages/AboutPage';
@@ -31,7 +32,7 @@ function App() {
           <Route path="/services" element={<ServicesPage />} /> 
           <Route path="/services/:slug" element={<ServiceDetailPage />} />
           <Route path="/formations" element={<FormationsPage />} />
-          <Route path="/formations/:collectionSlug" element={<FormationsPage />} />
+          <Route path="/formations/:collectionSlug" element={<CollectionPage  />} />
           <Route path="/formations/:collectionSlug/:productSlug" element={<ProductDetailPage />} />
           <Route path="/payment" element={<PaymentPage />} />
           <Route path="/apropos" element={<AboutPage />} />
