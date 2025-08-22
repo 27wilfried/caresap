@@ -8,6 +8,11 @@ import CollectionPage  from './components/pages/CollectionPage';
 import ProductDetailPage from './components/pages/ProductDetailPage'; 
 import PaymentPage from './components/pages/PaymentPage';
 import AboutPage from './components/pages/AboutPage';
+import LegalePage from './components/pages/LegalePage';
+import Remboursement from './components/pages/Remboursement';
+import Confidentialite from './components/pages/Confidentialite';
+import Cgv from './components/pages/Cgv';
+import AboutPlus from './components/pages/AboutPlus';
 import Contact from './components/pages/ContactPage'; 
 import BlogPage from './components/pages/BlogPage'; 
 import BlogDetailPage from './components/pages/BlogDetailPage';
@@ -30,12 +35,17 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/services" element={<ServicesPage />} /> 
+          <Route path="/mentions-legales" element={<LegalePage />} /> 
+          <Route path="/confidentialite" element={<Confidentialite />} /> 
+          <Route path="/remboursement" element={<Remboursement />} /> 
+          <Route path="/cgv" element={<Cgv />} /> 
           <Route path="/services/:slug" element={<ServiceDetailPage />} />
           <Route path="/formations" element={<FormationsPage />} />
           <Route path="/formations/:collectionSlug" element={<CollectionPage  />} />
           <Route path="/formations/:collectionSlug/:productSlug" element={<ProductDetailPage />} />
           <Route path="/payment" element={<PaymentPage />} />
           <Route path="/apropos" element={<AboutPage />} />
+          <Route path="/a-propos" element={<AboutPlus />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/blog/:id" element={<BlogDetailPage />} />

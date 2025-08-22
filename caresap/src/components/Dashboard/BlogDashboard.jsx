@@ -1,6 +1,7 @@
 // src/components/Dashboard/BlogDashboard.jsx
 import React, { useState } from 'react';
 import { Plus, Edit, Trash, ArrowLeft } from 'lucide-react';
+import { Editor } from '@tinymce/tinymce-react';
 
 // Modale de confirmation de suppression
 const ConfirmationModal = ({ isOpen, onConfirm, onCancel }) => {
@@ -67,6 +68,11 @@ const PostForm = ({ initialData, onSave, onCancel }) => {
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
+    // Fonction pour gérer le changement de contenu de l'éditeur TinyMCE
+    const handleEditorChange = (content) => {
+        setFormData((prev) => ({ ...prev, description: content }));
+    };
+
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -119,13 +125,19 @@ const PostForm = ({ initialData, onSave, onCancel }) => {
                     <label className="block text-sm font-medium text-gray-700">
                         Description complète
                     </label>
-                    <textarea
-                        name="description"
+                    {/* Intégration de l'éditeur TinyMCE */}
+                    <Editor
+                        apiKey="qaung5mvnrg5qc559fcwltcm9dujp3p9446d73doct6md738" // REMPLACEZ CETTE CHAÎNE PAR VOTRE CLÉ API
+                        init={{
+                            height: 300,
+                            menubar: false,
+                            plugins: 'advlist autolink lists link image charmap print preview anchor',
+                            toolbar: 'undo redo | formatselect | bold italic backcolor | \
+                                      alignleft aligncenter alignright alignjustify | \
+                                      bullist numlist outdent indent | removeformat | help'
+                        }}
                         value={formData.description}
-                        onChange={handleChange}
-                        rows="6"
-                        className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm"
-                        required
+                        onEditorChange={handleEditorChange}
                     />
                 </div>
                 <div>
@@ -268,6 +280,13 @@ const BlogDashboard = () => {
                                     {post.date} - {post.author} | {post.category}
                                 </p>
                                 <p className="text-gray-700 mb-4">{post.summary}</p>
+                                {/* Affichage de la description avec dangerouslySetInnerHTML */}
+                                {post.description && (
+                                    <div
+                                        className="text-gray-700 mb-4 prose max-w-none"
+                                        dangerouslySetInnerHTML={{ __html: post.description }}
+                                    ></div>
+                                )}
                                 <div className="flex justify-between">
                                     <button
                                         onClick={() => handleEdit(post)}

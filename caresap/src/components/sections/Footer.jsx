@@ -21,16 +21,16 @@ const Footer = () => {
               Votre partenaire de confiance pour l'expertise et la recherche en santé publique.
             </p>
             <div className="flex space-x-4 mt-4">
-              <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors duration-300">
+              <a href="https://www.facebook.com/CaRESaPbenin/?locale=fr_FR" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors duration-300">
                 <Facebook size={24} />
               </a>
-              <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors duration-300">
+              <a href="https://www.linkedin.com/company/caresap/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors duration-300">
                 <Linkedin size={24} />
               </a>
-              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors duration-300">
+              <a href="https://x.com/CaRESaPBenin?t=4S7qeghLcE1uzzmh-88QhQ&s=09" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors duration-300">
                 <X size={24} />
               </a>
-              <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors duration-300">
+              <a href="https://www.instagram.com/caresap_benin?igsh=c3l3eGZ2emkzaGt0" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors duration-300">
                 <Instagram size={24} />
               </a>
             </div>
@@ -112,8 +112,23 @@ const Footer = () => {
         </div>
         
         {/* Ligne de séparation et copyright */}
-        <div className="mt-12 pt-8 border-t border-gray-700 text-center text-gray-500">
-          <p>&copy; {new Date().getFullYear()} CaRESaP. Tous droits réservés.</p>
+        {/* Ligne de séparation et copyright */}
+        <div className="mt-12 pt-8 border-t border-gray-700 text-center">
+          <p className="text-gray-500 mb-2">&copy; {new Date().getFullYear()} CaRESaP. Tous droits réservés.</p>
+          <div className="flex flex-wrap justify-center space-x-4 text-sm text-gray-500">
+            <Link to="/mentions-legales" className="hover:text-blue-500 transition-colors duration-300">
+              Mentions légales
+            </Link>
+            <Link to="/cgv" className="hover:text-blue-500 transition-colors duration-300">
+              Conditions Générales de Vente
+            </Link>
+            <Link to="/remboursement" className="hover:text-blue-500 transition-colors duration-300">
+              Politique de remboursement
+            </Link>
+            <Link to="/confidentialite" className="hover:text-blue-500 transition-colors duration-300">
+              Politique de confidentialité
+            </Link>
+          </div>
         </div>
       </div>
     </footer>
