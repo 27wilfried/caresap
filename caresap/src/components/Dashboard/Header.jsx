@@ -4,7 +4,7 @@ import { LayoutDashboard, Bell, User } from 'lucide-react';
 
 const Header = () => {
   return (
-    <header className="bg-white p-6 shadow-md rounded-b-xl border-b border-gray-200">
+    <header className="p-6 shadow-md rounded-b-xl">
       <div className="flex justify-between items-center">
         
         {/* Titre du tableau de bord */}

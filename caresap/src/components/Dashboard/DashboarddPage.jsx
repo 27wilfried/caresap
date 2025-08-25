@@ -4,7 +4,8 @@ import Header from './Header';
 import ServicesDashboard from './ServicesDashboard'; // Supposons que vous ayez créé ces composants
 import FormationsDashboard from './FormationsDashboard';
 import BlogDashboard from './BlogDashboard';
-import OrdersList from './OrdersDashboard'; // Import du composant OrdersList
+import OrdersList from './OrdersDashboard'; 
+import ReviewForm from '../UserDashboard/ReviewForm';
 
 /**
  * Composant principal de la page du tableau de bord.
@@ -23,7 +24,9 @@ const DashboardPage = () => {
       case 'blog':
         return <BlogDashboard />;
       case 'commandes':
-        return <OrdersList />; // Assurez-vous d'importer et d'utiliser le composant OrdersList
+        return <OrdersList />;
+      case 'avis':
+        return <ReviewForm />;
       default:
         // Section par défaut, si aucune n'est sélectionnée
         return (

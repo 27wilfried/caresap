@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { Star } from 'lucide-react';
 
 /**
  * Composant de formulaire d'avis.
@@ -28,17 +29,15 @@ const ReviewForm = () => {
     }, 5000); // Le message disparaît après 5 secondes
   };
 
-  const Star = ({ selected, onSelect, onHover, onMouseOut }) => (
-    <span
-      className={`cursor-pointer text-2xl transition-colors duration-200 ${
-        selected ? 'text-yellow-400' : 'text-gray-300'
+  const StarRatingIcon = ({ selected, onSelect, onHover, onMouseOut }) => (
+    <Star
+      className={`cursor-pointer transition-colors duration-200 w-8 h-8 ${
+        selected ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300 fill-gray-300'
       }`}
       onClick={onSelect}
       onMouseEnter={onHover}
       onMouseLeave={onMouseOut}
-    >
-      ★
-    </span>
+    />
   );
 
   return (
@@ -52,6 +51,21 @@ const ReviewForm = () => {
         </div>
       )}
       <form onSubmit={handleSubmit(handleReviewSubmit)} className="space-y-6">
+        {/* Champ pour le nom */}
+        <div>
+          <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+            Votre nom
+          </label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            {...register('name')}
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-3"
+            placeholder="Ex: Jean Dupont"
+          />
+        </div>
+
         {/* Champ pour la profession */}
         <div>
           <label htmlFor="profession" className="block text-sm font-medium text-gray-700">
@@ -67,6 +81,50 @@ const ReviewForm = () => {
           />
         </div>
 
+        {/* Champ pour le titre */}
+        <div>
+          <label htmlFor="title" className="block text-sm font-medium text-gray-700">
+            Titre de l'avis
+          </label>
+          <input
+            type="text"
+            id="title"
+            name="title"
+            {...register('title')}
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-3"
+            placeholder="Ex: Prestation à la hauteur"
+          />
+        </div>
+
+        {/* Champ pour le pays / la ville */}
+        <div>
+          <label htmlFor="location" className="block text-sm font-medium text-gray-700">
+            Pays / Ville
+          </label>
+          <input
+            type="text"
+            id="location"
+            name="location"
+            {...register('location')}
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-3"
+            placeholder="Ex: Marseille, France"
+          />
+        </div>
+        
+        {/* NOUVEAU: Champ pour la date de l'avis */}
+        <div>
+          <label htmlFor="reviewDate" className="block text-sm font-medium text-gray-700">
+            Date de l'avis
+          </label>
+          <input
+            type="date"
+            id="reviewDate"
+            name="reviewDate"
+            {...register('reviewDate')}
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-3"
+          />
+        </div>
+
         {/* Champ pour l'image */}
         <div>
           <label htmlFor="userImage" className="block text-sm font-medium text-gray-700">
@@ -78,14 +136,14 @@ const ReviewForm = () => {
             name="userImage"
             {...register('userImage')}
             className="mt-1 block w-full text-sm text-gray-500
-                       file:mr-4 file:py-2 file:px-4
-                       file:rounded-full file:border-0
-                       file:text-sm file:font-semibold
-                       file:bg-blue-50 file:text-blue-700
-                       hover:file:bg-blue-100"
+                         file:mr-4 file:py-2 file:px-4
+                         file:rounded-full file:border-0
+                         file:text-sm file:font-semibold
+                         file:bg-blue-50 file:text-blue-700
+                         hover:file:bg-blue-100"
           />
         </div>
-        
+
         {/* Système d'étoiles */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -95,7 +153,7 @@ const ReviewForm = () => {
             {[...Array(5)].map((_, index) => {
               const starValue = index + 1;
               return (
-                <Star
+                <StarRatingIcon
                   key={index}
                   selected={starValue <= (hoverRating || rating)}
                   onSelect={() => setRating(starValue)}
