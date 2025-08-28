@@ -2,7 +2,7 @@
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
-
+import Typewriter from 'typewriter-effect';
 
 const HeroSection = () => {
   return (
@@ -14,9 +14,21 @@ const HeroSection = () => {
       </div>
 
       <div className="container mx-auto text-center relative z-10 px-4">
+      
+        
         <h1 className="text-4xl md:text-6xl font-extrabold text-primary mb-4 leading-tight">
-          Expertise en <span className="text-blue-600">santé publique</span>.
-        </h1>
+  <Typewriter
+    options={{
+      strings: ['Expertise en <span class="text-blue-600">santé publique</span>.'],
+      autoStart: true,
+      loop: false, // une seule fois
+      delay: 2, // vitesse d’écriture
+      deleteSpeed: 999999, // empêche l’effacement
+      cursor: '', // Supprime le curseur complètement
+    }}
+  />
+</h1>
+
         <h2 className="text-lg md:text-2xl font-medium text-gray-700 mb-6">
           Solutions de recherche & analyses <span className="text-primary font-semibold">garanties</span>
         </h2>
@@ -27,7 +39,7 @@ const HeroSection = () => {
 
         {/* Boutons */}
         <div className="flex flex-col sm:flex-row justify-center gap-4">
-          <Link   to="/contact"  className="px-6 py-3 bg-primary text-white rounded-full font-medium hover:bg-primary/90 transition">
+          <Link to="/contact" className="px-6 py-3 bg-primary text-white rounded-full font-medium hover:bg-primary/90 transition">
             Nous contacter
           </Link>
           <Link to="formations" className="px-6 py-3 text-primary rounded-full font-bold flex items-center justify-center gap-2 hover:bg-primary transition">

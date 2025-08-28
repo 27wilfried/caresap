@@ -1,0 +1,23 @@
+<div id="text"></div>
+
+<script>
+    const text = "Développeur";
+    let i = 0;
+
+    function typeWriter() {
+        if (i < text.length) {
+            document.getElementById("text").innerHTML += text.charAt(i);
+            i++;
+            setTimeout(typeWriter, 150); // vitesse d’écriture
+        } else {
+            // Pause avant de recommencer
+            setTimeout(() => {
+                document.getElementById("text").innerHTML = "";
+                i = 0;
+                typeWriter();
+            }, 2000); // 2 secondes de pause
+        }
+    }
+
+    typeWriter();
+</script>
