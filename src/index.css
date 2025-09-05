@@ -1,0 +1,154 @@
+/* 1. Importation des polices */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Playfair+Display:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+/* 2. Variables globales */
+:root {
+  --color-primary: #4361ee;
+  --color-secondary: #555;
+  --color-light-gray: #f9fafb;
+
+  --font-primary: 'Montserrat', sans-serif;
+  --font-title: 'Merriweather', serif;
+}
+
+/* 3. Styles globaux */
+body {
+  font-family: var(--font-primary);
+  color: #333;
+  margin: 0;
+  background-color: var(--color-light-gray);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-title);
+  font-weight: 700;
+  line-height: 1.2;
+  color: #000;
+  margin: 0;
+}
+
+p {
+  line-height: 1.6;
+  color: var(--color-secondary);
+  margin: 0;
+}
+
+/* 4. Classes utilitaires */
+.bg-primary {
+  background-color: var(--color-primary);
+}
+
+.text-primary {
+  color: var(--color-primary);
+}
+
+.text-secondary {
+  color: var(--color-secondary);
+}
+
+.border-primary {
+  border-color: var(--color-primary);
+}
+
+/* 5. Conteneur */
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+/* 6. Boutons */
+.btn-primary {
+  background-color: var(--color-primary);
+  color: white;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: transparent;
+  color: var(--color-primary);
+  border-radius: 0.375rem;
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: var(--color-primary);
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.375rem;
+  transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+/* 7. Responsivité */
+@media (max-width: 1024px) {
+  h1 {
+    font-size: 2.5rem;
+    /* 40px */
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    /* 24px */
+  }
+
+  .container {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2rem;
+    /* 32px */
+  }
+
+  h2 {
+    font-size: 1.25rem;
+    /* 20px */
+  }
+
+  p {
+    font-size: 1rem;
+    /* 16px */
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  h1 {
+    font-size: 1.75rem;
+    /* 28px */
+  }
+
+  h2 {
+    font-size: 1.125rem;
+    /* 18px */
+  }
+
+  p {
+    font-size: 0.95rem;
+  }
+}
