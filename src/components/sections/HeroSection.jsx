@@ -39,7 +39,7 @@ const HeroSection = () => {
 
         {/* Boutons */}
         <div className="flex flex-col sm:flex-row justify-center gap-4">
-          <Link to="/contact" className="px-6 py-3 bg-primary text-white rounded-full font-medium hover:bg-primary/90 transition">
+          <Link to="/contact" className="px-6 py-3 bg-primary text-white rounded-full font-medium hover:bg-primary/90 transition" style={{textDecroation:"none"}}>
             Nous contacter
           </Link>
           <Link to="formations" className="px-6 py-3 text-primary rounded-full font-bold flex items-center justify-center gap-2 hover:bg-primary transition">

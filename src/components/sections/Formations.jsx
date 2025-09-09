@@ -33,8 +33,9 @@ const Formations = () => {
       <div className="container mx-auto px-4 sm:px-6 relative">
         {/* En-tête de section */}
         <div className="text-center max-w-4xl mx-auto mb-12 md:mb-16">
-          <h2 className="text-4xl lg:text-5xl font-bold mb-6 text-gray-900">
-            Explorer nos Collections
+         
+          <h2 className="text-4xl lg:text-5xl font-extrabold text-gray-900 leading-tight pb-4">
+            Explorer nos<span className="text-primary"> Collections</span>
           </h2>
           <p className="text-lg lg:text-xl text-gray-600 leading-relaxed">
             Découvrez nos ressources organisées par catégories pour répondre à

@@ -32,8 +32,8 @@ export const isNew = (createdAt) => {
   return diffInDays < 30;
 };
 
-// export const host = "http://localhost:5000/";
-export const host = "http://172.17.211.121:5000/";
+export const host = "http://localhost:5000/";
+//export const host = "http://172.17.211.121:5000/";
 // export const host = "https://back.node.caresap.org/";
 
 export const getData = async (type, config = {}) => {

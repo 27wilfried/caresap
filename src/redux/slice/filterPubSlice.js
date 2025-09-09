@@ -12,7 +12,7 @@ const filterPubSlice = createSlice({
     SORT_PUBLICATIONS(state, action) {
       const { publications, sort } = action.payload;
 
-      const tempPublications = [];
+      var tempPublications = [];
       if (sort === "a-z") {
         tempPublications = publications.sort((a, b) =>
           a?.titre.localeCompare(b?.titre)

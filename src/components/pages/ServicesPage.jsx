@@ -11,9 +11,11 @@ const ServicesPage = () => {
     <div className="py-12 md:py-24">
       <div className="container mx-auto px-4 sm:px-6">
         <div className="text-center max-w-2xl mx-auto mb-12 md:mb-16">
-          <h1 className="text-4xl lg:text-5xl font-bold mb-4 text-gray-900">
+
+          <h2 className="text-4xl lg:text-5xl font-extrabold text-gray-900 leading-tight pb-4">
             Tous nos <span className="text-primary">services</span>
-          </h1>
+          </h2>
+
           <p className="text-lg lg:text-xl text-gray-600 leading-relaxed">
             Découvrez l'ensemble de nos expertises et trouvez la solution qui
             correspond à vos besoins en recherche et santé publique.

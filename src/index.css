@@ -3,6 +3,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
 
+
 /* 2. Variables globales */
 :root {
   --color-primary: #4361ee;
@@ -20,6 +21,18 @@ body {
   margin: 0;
   background-color: var(--color-light-gray);
 }
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+a:hover,
+a:focus {
+  text-decoration: none;
+  color: inherit;
+}
+
 
 h1,
 h2,

@@ -32,13 +32,13 @@ const About = () => {
 
           {/* Colonne image */}
           <div className="md:w-1/2 relative group">
-            <img 
-              src="https://www.santementale.fr/medias/2022/03/sante-publique.jpg"
-              alt="Équipe de professionnels"
-              className="rounded-3xl shadow-2xl w-full h-auto transform group-hover:scale-105 transition-transform duration-500"
-            />
-            <div className="absolute inset-0 rounded-3xl bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-          </div>
+          <img 
+            src="https://www.santementale.fr/medias/2022/03/sante-publique.jpg"
+            alt="Équipe de professionnels"
+            className="rounded-3xl w-[400px] h-auto mx-auto shadow-2xl transform transition-transform duration-500"
+          />
+        </div>
+
         </div>
       </div>
     </section>

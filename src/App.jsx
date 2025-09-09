@@ -12,6 +12,7 @@ import BlogPage from "./components/pages/BlogPage";
 import BlogDetailPage from "./components/pages/BlogDetailPage";
 import DashboardPage from "./components/Dashboard/DashboarddPage";
 import AuthPage from "./components/pages/auth/AuthPage";
+import ExpertiseDomainsPage from "./components/pages/ExpertiseDomainsPage"
 import UserDashboard from "./components/UserDashboard/UserDashboard";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -32,16 +33,23 @@ import { selectIsLoggedIn } from "./redux/slice/authSlice";
 import { useSelector } from "react-redux";
 import { ProtectedRoute } from "./components/hiddenLink/hiddenLink";
 
+import ScrollToTop from "./ScrollToTop";
+import WhatsAppButton from "./components/widgets/WhatsAppButton";
+
+
 function App() {
   return (
     <BrowserRouter>
       <ToastContainer />
       <Navbar />
+       <WhatsAppButton /> 
+      <ScrollToTop />
 
       <main>
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/services" element={<ServicesPage />} />
+          <Route path="/tous-nos-domaines" element={<ExpertiseDomainsPage />} />
           <Route path="/services/:id_serv" element={<ServiceDetailPage />} />
           <Route path="/formations" element={<FormationsPage />} />
           <Route path="/formations/:id_col" element={<CollectionPage />} />
