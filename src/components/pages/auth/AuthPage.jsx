@@ -1,59 +1,58 @@
-import React, { useState, useRef } from "react";
-// Les imports suivants ont été remplacés par des implémentations internes pour que le code fonctionne dans un seul fichier.
-// import { Mail, Lock, User, LogIn, UserPlus, Contact } from "lucide-react";
-// import { useDispatch, useSelector } from "react-redux";
-// import { checkEmail, createData } from "../../../helpers/fonctions";
-// import { SET_ACTIVE_USER } from "../../../redux/slice/authSlice";
-// import { useNavigate } from "react-router-dom";
-// import { Toast } from "primereact/toast";
+import React, { useState } from "react";
 
 // --- Mocks pour l'environnement de fichier unique
-const useDispatch = () => () => {}; // Mock pour useDispatch
-const useSelector = (selector) => selector({}); // Mock pour useSelector
-const useNavigate = () => () => {}; // Mock pour useNavigate
-const checkEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); // Mock de la fonction de validation
-const createData = (endpoint, data) => {
-  console.log(`Données envoyées à l'endpoint ${endpoint}:`, data);
-  if (endpoint === "private/client/auth") {
+const mockServices = {
+  useDispatch: () => () => {},
+  useSelector: (selector) => selector({}),
+  useNavigate: () => (path) => console.log(`Navigating to ${path}`),
+  checkEmail: (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email),
+  createData: (endpoint, data) => {
+    console.log(`Données envoyées à l'endpoint ${endpoint}:`, data);
+    if (endpoint === "private/client/auth") {
       if (data.email === "contact@caresap.org" && data.password === "123456") {
-          return Promise.resolve({
-              data: { data: { email: data.email, nom: "Admin", id_client: "123" }, token: "mock_token" }
-          });
+        return Promise.resolve({
+          data: { data: { email: data.email, nom: "Admin", id_client: "123", createdAt: new Date().toISOString() }, token: "mock_token" }
+        });
       }
       return Promise.reject({ data: { message: "Identifiants invalides." } });
-  }
+    }
 
-  if (endpoint === "private/client/create-client") {
-      // Simulation de l'envoi d'un e-mail de confirmation
-      console.log(`E-mail de confirmation envoyé à ${data.email} avec le code: 123456`);
+    if (endpoint === "private/client/create-client") {
+      if (!mockServices.checkEmail(data.email)) {
+        return Promise.reject({ data: { message: "Adresse e-mail invalide." } });
+      }
       return Promise.resolve({
-          data: { message: "Un code de confirmation a été envoyé à votre adresse e-mail." }
+        data: { message: "Un code de confirmation a été envoyé à votre adresse e-mail." }
       });
-  }
+    }
 
-  if (endpoint === "private/client/confirm-email") {
-      // Simulation de la vérification du code
+    if (endpoint === "private/client/confirm-email") {
       if (data.confirmationCode === "123456") {
-          return Promise.resolve({
-              data: { data: { email: data.email, nom: data.nom, id_client: "456" }, token: "new_mock_token" }
-          });
+        return Promise.resolve({
+          data: { data: { email: data.email, nom: data.nom, id_client: "456", createdAt: new Date().toISOString() }, token: "new_mock_token" }
+        });
       }
       return Promise.reject({ data: { message: "Code de confirmation invalide." } });
-  }
+    }
 
-  if (endpoint === "private/client/reset-password") {
+    if (endpoint === "private/client/set-password") {
+      return Promise.resolve({
+        data: { message: "Mot de passe défini avec succès." }
+      });
+    }
+
+    if (endpoint === "private/client/reset-password") {
       if (data.email === "test@test.com") {
-          return Promise.resolve({
-              data: { message: "Un lien de réinitialisation a été envoyé à votre adresse e-mail." }
-          });
+        return Promise.resolve({
+          data: { message: "Un lien de réinitialisation a été envoyé à votre adresse e-mail." }
+        });
       }
       return Promise.reject({ data: { message: "Erreur lors de l'envoi du lien de réinitialisation." } });
-  }
-
-  return Promise.reject({ data: { message: "Erreur de l'API." } });
+    }
+    return Promise.reject({ data: { message: "Erreur de l'API." } });
+  },
+  SET_ACTIVE_USER: (user) => ({ type: "SET_ACTIVE_USER", payload: user }),
 };
-
-const SET_ACTIVE_USER = (user) => ({ type: "SET_ACTIVE_USER", payload: user });
 
 // Remplacement des icônes Lucide par des SVG inline
 const icons = {
@@ -83,23 +82,17 @@ const icons = {
   ),
 };
 
-// Composant Toast personnalisé pour remplacer primereact
 const Toast = ({ visible, severity, summary, detail }) => {
   if (!visible) return null;
-  let color = "";
-  let bgColor = "";
-  if (severity === "success") {
-    color = "text-green-800";
-    bgColor = "bg-green-100";
-  } else if (severity === "error") {
-    color = "text-red-800";
-    bgColor = "bg-red-100";
-  } else if (severity === "warn") {
-    color = "text-orange-800";
-    bgColor = "bg-orange-100";
-  }
+  const colors = {
+    success: { bg: "bg-green-100", text: "text-green-800" },
+    error: { bg: "bg-red-100", text: "text-red-800" },
+    warn: { bg: "bg-yellow-100", text: "text-yellow-800" },
+  };
+  const { bg, text } = colors[severity] || {};
+
   return (
-    <div className={`fixed top-4 right-4 p-4 rounded-lg shadow-lg ${bgColor} ${color} transition-opacity duration-300`}>
+    <div className={`fixed top-4 right-4 p-4 rounded-lg shadow-lg ${bg} ${text} transition-opacity duration-300`}>
       <h4 className="font-bold">{summary}</h4>
       <p>{detail}</p>
     </div>
@@ -109,36 +102,56 @@ const Toast = ({ visible, severity, summary, detail }) => {
 const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [showForgotPassword, setShowForgotPassword] = useState(false);
-  const [showConfirmation, setShowConfirmation] = useState(false); // Nouvelle étape de confirmation
-  const [lastName, setLastName] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [contact, setContact] = useState("");
-  const [confirmationCode, setConfirmationCode] = useState(""); // État pour le code de confirmation
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [showPasswordCreation, setShowPasswordCreation] = useState(false);
+
+  const [formState, setFormState] = useState({
+    lastName: "",
+    firstName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    contact: "",
+    confirmationCode: "",
+  });
+
   const [submitted, setSubmitted] = useState(false);
   const [toast, setToast] = useState({ visible: false, severity: "", summary: "", detail: "" });
-  const [showPassword, setShowPassword] = useState(false); // Nouveau état pour l'affichage du mot de passe
+  const [showPassword, setShowPassword] = useState(false);
 
+  const { useDispatch, useNavigate, createData, checkEmail, SET_ACTIVE_USER } = mockServices;
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const setActiveUser = (user) => {
-    dispatch(
-      SET_ACTIVE_USER({
-        email: user.data.data.email,
-        useName: user.data.data.nom,
-        userId: user.data.data.id_client,
-        dateCreated: user.data.data.createdAt,
-        token: user.data.token,
-      })
-    );
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormState(prevState => ({ ...prevState, [name]: value }));
   };
 
   const handleToast = (severity, summary, detail) => {
     setToast({ visible: true, severity, summary, detail });
-    setTimeout(() => setToast({ visible: false, severity: "", summary: "", detail: "" }), 3000);
+    setTimeout(() => setToast({ visible: false }), 3000);
+  };
+
+  const resetForm = () => {
+    setFormState({
+      lastName: "",
+      firstName: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+      contact: "",
+      confirmationCode: "",
+    });
+    setSubmitted(false);
+  };
+
+  const toggleView = () => {
+    setIsLogin(!isLogin);
+    setShowForgotPassword(false);
+    setShowConfirmation(false);
+    setShowPasswordCreation(false);
+    resetForm();
   };
 
   const handleSubmit = async (e) => {
@@ -146,30 +159,27 @@ const AuthPage = () => {
     setSubmitted(true);
 
     if (isLogin) {
-      if (!email || !checkEmail(email) || !password) return;
+      if (!formState.email || !checkEmail(formState.email) || !formState.password) return;
       try {
-        const client = await createData("private/client/auth", { email, password });
-        setActiveUser(client);
-        if (client.data.data.email === "contact@caresap.org") {
-          navigate("/dashboard");
-        } else {
-          navigate("/user-dashboard");
-        }
+        const client = await createData("private/client/auth", { email: formState.email, password: formState.password });
+        dispatch(SET_ACTIVE_USER({
+          email: client.data.data.email,
+          useName: client.data.data.nom,
+          userId: client.data.data.id_client,
+          dateCreated: client.data.data.createdAt,
+          token: client.data.token,
+        }));
+        navigate(client.data.data.email === "contact@caresap.org" ? "/dashboard" : "/user-dashboard");
       } catch (error) {
         handleToast("error", "Erreur", error?.data?.message || "Erreur lors de l'authentification.");
-        console.log("error", error);
       }
     } else { // Cas de l'inscription
-      if (!lastName || !firstName || !email || !checkEmail(email) || !password || !confirmPassword || !contact) return;
-      if (password !== confirmPassword) {
-        handleToast("warn", "Avertissement", "Les mots de passe ne correspondent pas.");
-        return;
-      }
+      if (!formState.lastName || !formState.firstName || !formState.email || !checkEmail(formState.email) || !formState.contact) return;
       try {
-        const nomComplet = `${lastName} ${firstName}`;
-        await createData("private/client/create-client", { nom: nomComplet, email, password, contact });
+        const nomComplet = `${formState.lastName} ${formState.firstName}`;
+        await createData("private/client/create-client", { nom: nomComplet, email: formState.email, contact: formState.contact });
         handleToast("success", "Succès", "Veuillez vérifier votre e-mail pour le code de confirmation.");
-        setShowConfirmation(true); // Passer à l'étape de confirmation
+        setShowConfirmation(true);
       } catch (error) {
         handleToast("error", "Erreur", error?.data?.message || "Erreur lors de la création du compte.");
       }
@@ -178,51 +188,258 @@ const AuthPage = () => {
 
   const handleConfirmationSubmit = async (e) => {
     e.preventDefault();
-    if (!confirmationCode) {
+    if (!formState.confirmationCode) {
       handleToast("warn", "Avertissement", "Veuillez entrer le code de confirmation.");
       return;
     }
     try {
-      const nomComplet = `${lastName} ${firstName}`;
-      const client = await createData("private/client/confirm-email", { email, confirmationCode, nom: nomComplet });
-      setActiveUser(client);
-      navigate("/user-dashboard");
+      const nomComplet = `${formState.lastName} ${formState.firstName}`;
+      await createData("private/client/confirm-email", { email: formState.email, confirmationCode: formState.confirmationCode, nom: nomComplet });
+      handleToast("success", "Succès", "Code de confirmation valide. Veuillez créer votre mot de passe.");
+      setShowConfirmation(false);
+      setShowPasswordCreation(true);
     } catch (error) {
       handleToast("error", "Erreur", error?.data?.message || "Code de confirmation invalide.");
     }
   };
 
+  const handlePasswordCreationSubmit = async (e) => {
+    e.preventDefault();
+    if (!formState.password || !formState.confirmPassword) {
+      handleToast("warn", "Avertissement", "Veuillez renseigner les mots de passe.");
+      return;
+    }
+    if (formState.password !== formState.confirmPassword) {
+      handleToast("warn", "Avertissement", "Les mots de passe ne correspondent pas.");
+      return;
+    }
+    try {
+      const nomComplet = `${formState.lastName} ${formState.firstName}`;
+      await createData("private/client/set-password", { email: formState.email, password: formState.password });
+      handleToast("success", "Succès", "Votre mot de passe a été créé avec succès.");
+      setIsLogin(true); // Rediriger vers la page de connexion
+      setShowPasswordCreation(false);
+    } catch (error) {
+      handleToast("error", "Erreur", error?.data?.message || "Erreur lors de la création du mot de passe.");
+    }
+  };
+
   const handleForgotPasswordSubmit = async (e) => {
     e.preventDefault();
-    if (!email || !checkEmail(email)) {
+    if (!formState.email || !checkEmail(formState.email)) {
       handleToast("warn", "Avertissement", "Veuillez entrer une adresse e-mail valide.");
       return;
     }
     try {
-      await createData("private/client/reset-password", { email });
+      await createData("private/client/reset-password", { email: formState.email });
       handleToast("success", "Succès", "Un lien de réinitialisation a été envoyé à votre adresse e-mail.");
       setShowForgotPassword(false);
+      resetForm();
     } catch (error) {
       handleToast("error", "Erreur", error?.data?.message || "Erreur lors de l'envoi du lien de réinitialisation.");
     }
   };
 
-  const toggleView = () => {
-    setIsLogin(!isLogin);
-    setLastName("");
-    setFirstName("");
-    setEmail("");
-    setPassword("");
-    setConfirmPassword("");
-    setContact("");
-    setShowForgotPassword(false);
-    setShowConfirmation(false); // Réinitialiser l'étape de confirmation
-  };
-
-  // Fonction pour basculer l'affichage du mot de passe
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+
+  // Validation des champs
+  const getValidationMessage = (fieldName) => {
+    if (!submitted) return null;
+    switch (fieldName) {
+      case 'lastName':
+        return formState.lastName.trim() === "" ? "Veuillez renseigner votre nom." : null;
+      case 'firstName':
+        return formState.firstName.trim() === "" ? "Veuillez renseigner votre prénom." : null;
+      case 'email':
+        return !checkEmail(formState.email) ? "Veuillez renseigner un email valide." : null;
+      case 'password':
+        return formState.password === "" ? "Veuillez renseigner un mot de passe." : null;
+      case 'confirmPassword':
+        return formState.confirmPassword === "" ? "Veuillez confirmer votre mot de passe." : null;
+      case 'contact':
+        return formState.contact.trim() === "" ? "Veuillez renseigner un contact valide." : null;
+      case 'confirmationCode':
+        return formState.confirmationCode.trim() === "" ? "Veuillez renseigner un code de confirmation." : null;
+      default:
+        return null;
+    }
+  };
+
+  const renderFormContent = () => {
+    if (showForgotPassword) {
+      return (
+        <form onSubmit={handleForgotPasswordSubmit} className="space-y-5">
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-1">Adresse e-mail</label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                <icons.Mail size={20} className="text-gray-400" />
+              </div>
+              <input type="email" name="email" className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition" value={formState.email} onChange={handleChange} required />
+            </div>
+            <span className="text-red-500 text-xs">{getValidationMessage('email')}</span>
+          </div>
+          <button type="submit" className="w-full py-3 rounded-lg bg-blue-600 text-white font-bold shadow-md transition-transform duration-300 hover:scale-105 hover:bg-blue-700">Réinitialiser le mot de passe</button>
+          <p className="mt-6 text-center text-gray-700 text-sm">
+            <button onClick={() => setShowForgotPassword(false)} className="text-blue-600 font-semibold ml-1 hover:underline focus:outline-none">Retour à la connexion</button>
+          </p>
+        </form>
+      );
+    } else if (showConfirmation) {
+      return (
+        <form onSubmit={handleConfirmationSubmit} className="space-y-5">
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-1">Code de confirmation</label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                <icons.Lock size={20} className="text-gray-400" />
+              </div>
+              <input type="text" name="confirmationCode" className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition" value={formState.confirmationCode} onChange={handleChange} required />
+            </div>
+            <span className="text-red-500 text-xs">{getValidationMessage('confirmationCode')}</span>
+          </div>
+          <button type="submit" className="w-full py-3 rounded-lg bg-blue-600 text-white font-bold shadow-md transition-transform duration-300 hover:scale-105 hover:bg-blue-700">Confirmer</button>
+          <p className="mt-6 text-center text-gray-700 text-sm">
+            <button onClick={() => { setShowConfirmation(false); toggleView(); }} className="text-blue-600 font-semibold ml-1 hover:underline focus:outline-none">Retour à l'inscription</button>
+          </p>
+        </form>
+      );
+    } else if (showPasswordCreation) {
+      return (
+        <form onSubmit={handlePasswordCreationSubmit} className="space-y-5">
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-1">Nouveau mot de passe</label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                <icons.Lock size={20} className="text-gray-400" />
+              </div>
+              <input type={showPassword ? "text" : "password"} name="password" className="w-full pl-10 pr-10 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition" value={formState.password} onChange={handleChange} required />
+              <div className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer" onClick={togglePasswordVisibility}>
+                {showPassword ? <icons.Eye size={20} /> : <icons.EyeOff size={20} />}
+              </div>
+            </div>
+            <span className="text-red-500 text-xs">{getValidationMessage('password')}</span>
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-1">Confirmer le mot de passe</label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                <icons.Lock size={20} className="text-gray-400" />
+              </div>
+              <input type={showPassword ? "text" : "password"} name="confirmPassword" className="w-full pl-10 pr-10 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition" value={formState.confirmPassword} onChange={handleChange} required />
+              <div className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer" onClick={togglePasswordVisibility}>
+                {showPassword ? <icons.Eye size={20} /> : <icons.EyeOff size={20} />}
+              </div>
+            </div>
+            <span className="text-red-500 text-xs">{getValidationMessage('confirmPassword')}</span>
+          </div>
+          <button type="submit" className="w-full py-3 rounded-lg bg-blue-600 text-white font-bold shadow-md transition-transform duration-300 hover:scale-105 hover:bg-blue-700">Créer mon mot de passe</button>
+        </form>
+      );
+    } else { // Inscription ou connexion
+      return (
+        <form onSubmit={handleSubmit} className="space-y-5">
+          {!isLogin && (
+            <>
+              <div className="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
+                <div className="flex-1">
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Nom</label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                      <icons.User size={20} className="text-gray-400" />
+                    </div>
+                    <input type="text" name="lastName" className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition" value={formState.lastName} onChange={handleChange} required />
+                  </div>
+                  <span className="text-red-500 text-xs">{getValidationMessage('lastName')}</span>
+                </div>
+                <div className="flex-1">
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Prénom</label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                      <icons.User size={20} className="text-gray-400" />
+                    </div>
+                    <input type="text" name="firstName" className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition" value={formState.firstName} onChange={handleChange} required />
+                  </div>
+                  <span className="text-red-500 text-xs">{getValidationMessage('firstName')}</span>
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1">Contact</label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <icons.Contact size={20} className="text-gray-400" />
+                  </div>
+                  <input type="number" name="contact" className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition" value={formState.contact} onChange={handleChange} required />
+                </div>
+                <span className="text-red-500 text-xs">{getValidationMessage('contact')}</span>
+              </div>
+            </>
+          )}
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-1">Adresse e-mail</label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                <icons.Mail size={20} className="text-gray-400" />
+              </div>
+              <input type="email" name="email" className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition" value={formState.email} onChange={handleChange} required />
+            </div>
+            <span className="text-red-500 text-xs">{getValidationMessage('email')}</span>
+          </div>
+          {isLogin && (
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-1">Mot de passe</label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                  <icons.Lock size={20} className="text-gray-400" />
+                </div>
+                <input type={showPassword ? "text" : "password"} name="password" className="w-full pl-10 pr-10 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition" value={formState.password} onChange={handleChange} required />
+                <div className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer" onClick={togglePasswordVisibility}>
+                  {showPassword ? <icons.Eye size={20} /> : <icons.EyeOff size={20} />}
+                </div>
+              </div>
+              <span className="text-red-500 text-xs">{getValidationMessage('password')}</span>
+            </div>
+          )}
+          <button type="submit" className="w-full py-3 rounded-lg bg-blue-600 text-white font-bold shadow-md transition-transform duration-300 hover:scale-105 hover:bg-blue-700">
+            {isLogin ? "Se connecter" : "S'inscrire"}
+          </button>
+        </form>
+      );
+    }
+  };
+
+  const renderTitleAndSubtitle = () => {
+    if (showForgotPassword) {
+      return {
+        title: "Mot de passe oublié ?",
+        subtitle: "Entrez votre e-mail pour réinitialiser votre mot de passe.",
+      };
+    } else if (showConfirmation) {
+      return {
+        title: "Confirmer votre e-mail",
+        subtitle: "Entrez le code de confirmation envoyé à votre adresse e-mail.",
+      };
+    } else if (showPasswordCreation) {
+      return {
+        title: "Créer un mot de passe",
+        subtitle: "Définissez un mot de passe pour votre nouveau compte.",
+      };
+    } else if (isLogin) {
+      return {
+        title: "Connexion",
+        subtitle: "Accédez à votre tableau de bord.",
+      };
+    } else {
+      return {
+        title: "Créer un compte",
+        subtitle: "Rejoignez notre communauté.",
+      };
+    }
+  };
+
+  const { title, subtitle } = renderTitleAndSubtitle();
 
   return (
     <div
@@ -232,256 +449,25 @@ const AuthPage = () => {
       }}
     >
       <Toast {...toast} />
-
       <div className="absolute inset-0 backdrop-blur-sm"></div>
-
       <div className="relative bg-white/90 rounded-3xl shadow-2xl p-10 m-10 w-full max-w-md border border-gray-200">
         <div className="text-center mb-8">
           <div className="inline-block p-4 rounded-full bg-blue-600 text-white shadow-lg mb-4 transform transition-transform duration-300 hover:scale-110">
             {isLogin ? <icons.LogIn size={32} /> : <icons.UserPlus size={32} />}
           </div>
-          <h2 className="text-3xl font-extrabold text-gray-900">
-            {showForgotPassword ? "Mot de passe oublié ?" : (isLogin ? "Connexion" : (showConfirmation ? "Confirmer votre e-mail" : "Créer un compte"))}
-          </h2>
-          <p className="mt-2 text-sm text-gray-700">
-            {showForgotPassword ? "Entrez votre e-mail pour réinitialiser votre mot de passe." : (isLogin ? "Accédez à votre tableau de bord." : (showConfirmation ? "Entrez le code de confirmation envoyé à votre adresse e-mail." : "Rejoignez notre communauté."))}
-          </p>
+          <h2 className="text-3xl font-extrabold text-gray-900">{title}</h2>
+          <p className="mt-2 text-sm text-gray-700">{subtitle}</p>
         </div>
 
-        {showForgotPassword ? (
-          <form onSubmit={handleForgotPasswordSubmit} className="space-y-5">
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1">
-                Adresse e-mail
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                  <icons.Mail size={20} className="text-gray-400" />
-                </div>
-                <input
-                  type="email"
-                  className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-              </div>
-            </div>
-            <button
-              type="submit"
-              className="w-full py-3 rounded-lg bg-blue-600 text-white font-bold shadow-md transition-transform duration-300 hover:scale-105 hover:bg-blue-700"
-            >
-              Réinitialiser le mot de passe
-            </button>
-            <p className="mt-6 text-center text-gray-700 text-sm">
-              <button
-                onClick={() => setShowForgotPassword(false)}
-                className="text-blue-600 font-semibold ml-1 hover:underline focus:outline-none"
-              >
-                Retour à la connexion
-              </button>
-            </p>
-          </form>
-        ) : showConfirmation ? (
-          <form onSubmit={handleConfirmationSubmit} className="space-y-5">
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1">
-                Code de confirmation
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                  <icons.Lock size={20} className="text-gray-400" />
-                </div>
-                <input
-                  type="text"
-                  className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-                  value={confirmationCode}
-                  onChange={(e) => setConfirmationCode(e.target.value)}
-                  required
-                />
-              </div>
-            </div>
-            <button
-              type="submit"
-              className="w-full py-3 rounded-lg bg-blue-600 text-white font-bold shadow-md transition-transform duration-300 hover:scale-105 hover:bg-blue-700"
-            >
-              Confirmer
-            </button>
-            <p className="mt-6 text-center text-gray-700 text-sm">
-              <button
-                onClick={() => {
-                  setShowConfirmation(false);
-                  toggleView();
-                }}
-                className="text-blue-600 font-semibold ml-1 hover:underline focus:outline-none"
-              >
-                Retour à l'inscription
-              </button>
-            </p>
-          </form>
-        ) : (
-          <form onSubmit={handleSubmit} className="space-y-5">
-            {!isLogin && (
-              <div className="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
-                <div className="flex-1">
-                  <label className="block text-sm font-semibold text-gray-700 mb-1">
-                    Nom
-                  </label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                      <icons.User size={20} className="text-gray-400" />
-                    </div>
-                    <input
-                      type="text"
-                      className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-                      value={lastName}
-                      onChange={(e) => setLastName(e.target.value)}
-                      required
-                    />
-                    {submitted && lastName === "" && (
-                      <span className="text-red-500 text-xs">
-                        Veuillez renseigner votre nom
-                      </span>
-                    )}
-                  </div>
-                </div>
+        {renderFormContent()}
 
-                <div className="flex-1">
-                  <label className="block text-sm font-semibold text-gray-700 mb-1">
-                    Prénom
-                  </label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                      <icons.User size={20} className="text-gray-400" />
-                    </div>
-                    <input
-                      type="text"
-                      className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-                      value={firstName}
-                      onChange={(e) => setFirstName(e.target.value)}
-                      required
-                    />
-                  </div>
-                </div>
-              </div>
-            )}
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1">
-                Adresse e-mail
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                  <icons.Mail size={20} className="text-gray-400" />
-                </div>
-                <input
-                  type="email"
-                  className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-                {submitted && !checkEmail(email) && (
-                  <span className="text-red-500 text-xs">
-                    Veuillez renseigner un email valide
-                  </span>
-                )}
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1">
-                Mot de passe
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                  <icons.Lock size={20} className="text-gray-400" />
-                </div>
-                <input
-                  type={showPassword ? "text" : "password"}
-                  className="w-full pl-10 pr-10 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
-                <div className="absolute inset-y-0 right-0 flex items-center pr-3" onClick={togglePasswordVisibility}>
-                  {showPassword ? <icons.Eye size={20} /> : <icons.EyeOff size={20} />}
-                </div>
-                {submitted && password === "" && (
-                  <span className="text-red-500 text-xs">
-                    Veuillez renseigner un mot de passe
-                  </span>
-                )}
-              </div>
-            </div>
-
-            {!isLogin && (
-              <>
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-1">
-                    Confirmer le mot de passe
-                  </label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                      <icons.Lock size={20} className="text-gray-400" />
-                    </div>
-                    <input
-                      type={showPassword ? "text" : "password"}
-                      className="w-full pl-10 pr-10 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      required
-                    />
-                    <div className="absolute inset-y-0 right-0 flex items-center pr-3" onClick={togglePasswordVisibility}>
-                      {showPassword ? <icons.Eye size={20} /> : <icons.EyeOff size={20} />}
-                    </div>
-                    {submitted && confirmPassword === "" && (
-                      <span className="text-red-500 text-xs">
-                        Veuillez confirmer votre mot de passe
-                      </span>
-                    )}
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-1">
-                    Contact
-                  </label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                      <icons.Contact size={20} className="text-gray-400" />
-                    </div>
-                    <input
-                      type="number"
-                      className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-                      value={contact}
-                      onChange={(e) => setContact(e.target.value)}
-                      required
-                    />
-                    {submitted && contact === "" && (
-                      <span className="text-red-500 text-xs">
-                        Veuillez renseigner un contact valide
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </>
-            )}
-
-            <button
-              type="submit"
-              className="w-full py-3 rounded-lg bg-blue-600 text-white font-bold shadow-md transition-transform duration-300 hover:scale-105 hover:bg-blue-700"
-            >
-              {isLogin ? "Se connecter" : "S'inscrire"}
-            </button>
-          </form>
-        )}
-
+        {/* Liens de bascule */}
         <p className="mt-6 text-center text-gray-700 text-sm">
-          {showForgotPassword ? "" : (isLogin ? "Pas de compte ?" : (showConfirmation ? "" : "Déjà un compte ?"))}
-          {showForgotPassword ? "" : (
-            <button
-              onClick={toggleView}
-              className="text-blue-600 font-semibold ml-1 hover:underline focus:outline-none"
-            >
+          {!showForgotPassword && !showConfirmation && !showPasswordCreation && (
+            isLogin ? "Pas de compte ?" : "Déjà un compte ?"
+          )}
+          {!showForgotPassword && !showConfirmation && !showPasswordCreation && (
+            <button onClick={toggleView} className="text-blue-600 font-semibold ml-1 hover:underline focus:outline-none">
               {isLogin ? "S'inscrire" : "Se connecter"}
             </button>
           )}
@@ -489,10 +475,7 @@ const AuthPage = () => {
 
         {isLogin && !showForgotPassword && (
           <p className="mt-4 text-center text-sm">
-            <button
-              onClick={() => setShowForgotPassword(true)}
-              className="text-blue-600 font-semibold hover:underline focus:outline-none"
-            >
+            <button onClick={() => { setShowForgotPassword(true); resetForm(); }} className="text-blue-600 font-semibold hover:underline focus:outline-none">
               Mot de passe oublié ?
             </button>
           </p>
