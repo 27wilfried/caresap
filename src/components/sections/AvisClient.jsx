@@ -3,6 +3,7 @@ import { Star, Quote } from "lucide-react";
 import { getData, host } from "../../helpers/fonctions";
 import { Skeleton } from "primereact/skeleton";
 
+
 const AvisClient = () => {
   const [avis, setAvis] = useState([]);
   const [loadingAvis, setLoadingAvis] = useState(true);
@@ -107,13 +108,15 @@ const AvisClient = () => {
                     <div className="flex items-center mb-6">
                       <div className="relative">
                         <img
-                          src={`${host}rg/file/${review?.PhotoAvi?.img_avis?.replace(
-                            "uploads/img/",
-                            ""
-                          )}`}
-                          alt={review?.nom}
+                          src={
+                            review?.PhotoAvi?.img_avis
+                              ? `${host}file/${review.PhotoAvi.img_avis.replace("uploads/img/", "")}`
+                              : "/images/default-avatar.avif" // image par défaut si pas de photo
+                          }
+                          alt={review?.nom || "Client"}
                           className="w-16 h-16 rounded-2xl object-cover shadow-md ring-4 ring-white"
                         />
+
                         <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full border-3 border-white flex items-center justify-center">
                           <div className="w-2 h-2 bg-white rounded-full"></div>
                         </div>
@@ -167,15 +170,17 @@ const AvisClient = () => {
                 avis
                   .slice(0, 4)
                   .map((review, i) => (
-                    <img
-                      key={i}
-                      src={`${host}file/${review?.PhotoAvi?.img_avis?.replace(
-                        "uploads/img/",
-                        ""
-                      )}`}
-                      alt={review.nom}
-                      className="w-12 h-12 rounded-full border-3 border-white shadow-sm object-cover"
-                    />
+                   <img
+                    key={i}
+                    src={
+                      review?.PhotoAvi?.img_avis
+                        ? `${host}file/${review.PhotoAvi.img_avis.replace("uploads/img/", "")}`
+                        : "/images/default-avatar.avif"
+                    }
+                    alt={review.nom || "Client"}
+                    className="w-12 h-12 rounded-full border-3 border-white shadow-sm object-cover"
+                  />
+
                   ))}
             </div>
 
