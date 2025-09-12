@@ -53,7 +53,7 @@ const Navbar = () => {
               return (
                 <ShowOnLogout key={link.name}>
                   <Link
-                    to="/auth"
+                    to="/login"
                     className="px-4 py-2 text-secondary hover:text-primary hover:bg-primary-50 rounded-md text-sm font-medium transition-all duration-200 flex items-center space-x-2"
                   >
                     Login

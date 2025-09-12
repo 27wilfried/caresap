@@ -12,7 +12,7 @@ import BlogPage from "./components/pages/BlogPage";
 import BlogDetailPage from "./components/pages/BlogDetailPage";
 import DashboardPage from "./components/Dashboard/DashboarddPage";
 import AuthPage from "./components/pages/auth/AuthPage";
-import ExpertiseDomainsPage from "./components/pages/ExpertiseDomainsPage"
+import ExpertiseDomainsPage from "./components/pages/ExpertiseDomainsPage";
 import UserDashboard from "./components/UserDashboard/UserDashboard";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -21,7 +21,10 @@ import Remboursement from "./components/pages/Remboursement";
 import Confidentialite from "./components/pages/Confidentialite";
 import Cgv from "./components/pages/Cgv";
 import AboutPlus from "./components/pages/AboutPlus";
-
+import Login from "./components/pages/auth/Login";
+import Register from "./components/pages/auth/Register";
+import ForgotPassword from "./components/pages/auth/ForgotPassword";
+import ResetPassword from "./components/pages/auth/ResetPassword";
 // Importez le nouveau composant de la page du panier
 import CartPage from "./components/Cart/CartPage";
 
@@ -36,13 +39,12 @@ import { ProtectedRoute } from "./components/hiddenLink/hiddenLink";
 import ScrollToTop from "./ScrollToTop";
 import WhatsAppButton from "./components/widgets/WhatsAppButton";
 
-
 function App() {
   return (
     <BrowserRouter>
       <ToastContainer />
       <Navbar />
-       <WhatsAppButton /> 
+      <WhatsAppButton />
       <ScrollToTop />
 
       <main>
@@ -93,8 +95,10 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route path="/auth" element={<AuthPage />} />
-
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="reset-password" element={<ResetPassword />} />
           {/* Nouvelle route pour la page du panier */}
           <Route path="/panier" element={<CartPage />} />
 

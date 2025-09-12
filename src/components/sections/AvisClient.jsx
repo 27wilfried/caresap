@@ -3,7 +3,6 @@ import { Star, Quote } from "lucide-react";
 import { getData, host } from "../../helpers/fonctions";
 import { Skeleton } from "primereact/skeleton";
 
-
 const AvisClient = () => {
   const [avis, setAvis] = useState([]);
   const [loadingAvis, setLoadingAvis] = useState(true);
@@ -110,7 +109,10 @@ const AvisClient = () => {
                         <img
                           src={
                             review?.PhotoAvi?.img_avis
-                              ? `${host}file/${review.PhotoAvi.img_avis.replace("uploads/img/", "")}`
+                              ? `${host}file/${review.PhotoAvi.img_avis.replace(
+                                  "uploads/img/",
+                                  ""
+                                )}`
                               : "/images/default-avatar.avif" // image par défaut si pas de photo
                           }
                           alt={review?.nom || "Client"}
@@ -136,21 +138,21 @@ const AvisClient = () => {
                     </h4>
 
                     <div className="flex mb-6 space-x-1">
-                      {Array.from({ length: review?.nbre_etoil }).map((_, i) => (
-                        <Star
-                          key={`empty-${i}`}
-                          size={18}
-                          className="text-gray-300 fill-gray-300"
-                        />
-                      ))}
+                      {Array.from({ length: review?.nbre_etoil }).map(
+                        (_, i) => (
+                          <Star
+                            key={`star-${i}`}
+                            size={18}
+                            className="text-yellow-400 fill-yellow-400"
+                          />
+                        )
+                      )}
                     </div>
 
                     <blockquote className="text-slate-700 leading-relaxed text-base italic relative">
                       {review.text}
                     </blockquote>
-                    <div className="flex mb-6 space-x-1">
-                      {review?.pays}
-                    </div>
+                    <div className="flex mb-6 space-x-1">{review?.pays}</div>
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 rounded-3xl"></div>
                   </div>
                 ))}
@@ -170,17 +172,19 @@ const AvisClient = () => {
                 avis
                   .slice(0, 4)
                   .map((review, i) => (
-                   <img
-                    key={i}
-                    src={
-                      review?.PhotoAvi?.img_avis
-                        ? `${host}file/${review.PhotoAvi.img_avis.replace("uploads/img/", "")}`
-                        : "/images/default-avatar.avif"
-                    }
-                    alt={review.nom || "Client"}
-                    className="w-12 h-12 rounded-full border-3 border-white shadow-sm object-cover"
-                  />
-
+                    <img
+                      key={i}
+                      src={
+                        review?.PhotoAvi?.img_avis
+                          ? `${host}file/${review.PhotoAvi.img_avis.replace(
+                              "uploads/img/",
+                              ""
+                            )}`
+                          : "/images/default-avatar.avif"
+                      }
+                      alt={review.nom || "Client"}
+                      className="w-12 h-12 rounded-full border-3 border-white shadow-sm object-cover"
+                    />
                   ))}
             </div>
 
