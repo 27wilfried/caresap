@@ -1,6 +1,5 @@
 import React from 'react';
-import { MessageCircle } from "lucide-react";
-
+import whatsappIcon from '../../assets/whatsapp.webp'; // ajuste le chemin selon ta structure
 
 const WhatsAppButton = () => {
   const phoneNumber = '+2290161377398';
@@ -11,9 +10,13 @@ const WhatsAppButton = () => {
       href={`https://wa.me/${phoneNumber}?text=${message}`}
       target="_blank"
       rel="noopener noreferrer"
-      className="fixed bottom-5 right-5 bg-green-500 hover:bg-green-600 text-white p-4 rounded-full shadow-lg flex items-center justify-center transition-all duration-300 z-50"
+      className="fixed bottom-5 right-5 text-white p-4 flex items-center justify-center transition-all duration-300 z-50"
     >
-      <MessageCircle size={28} />
+      <img 
+        src={whatsappIcon} 
+        alt="WhatsApp" 
+        className="w-50 h-20"
+      />
     </a>
   );
 };

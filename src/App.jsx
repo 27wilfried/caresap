@@ -9,6 +9,7 @@ import PaymentPage from "./components/pages/PaymentPage";
 import AboutPage from "./components/pages/AboutPage";
 import Contact from "./components/pages/ContactPage";
 import BlogPage from "./components/pages/BlogPage";
+import Facture from "./components/pages/Facture";
 import BlogDetailPage from "./components/pages/BlogDetailPage";
 import DashboardPage from "./components/Dashboard/DashboarddPage";
 import AuthPage from "./components/pages/auth/AuthPage";
@@ -73,6 +74,7 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route path="/facture" element={<Facture />} />
           <Route path="/apropos" element={<AboutPage />} />
           <Route path="/a-propos" element={<AboutPlus />} />
           <Route path="/contact" element={<Contact />} />
