@@ -42,34 +42,31 @@ const ProductsList = ({
         </button>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {products.length === 0 ? (
+        {products?.length === 0 ? (
           <p className="text-gray-500 col-span-3 text-center">
             Aucun produit pour cette collection. Ajoutez-en un !
           </p>
         ) : (
-          products.map((product) => (
+          products?.map((product) => (
             <div
-              key={product.id_res}
+              key={product?.id_res}
               className="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col"
             >
               <img
-                src={`${host}file/${product?.PhotoRessource?.img_res?.replace(
-                  "uploads/img/",
-                  ""
-                )}`}
-                alt={product.titre}
+                src={product?.img_res}
+                alt={product?.titre}
                 className="h-48 w-full object-cover"
               />
               <div className="p-6 flex-grow">
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                  {product.titre}
+                  {product?.titre}
                 </h3>
                 <p className="text-gray-600 text-sm mb-4 line-clamp-3">
-                  {shortenText(product.desc)}
+                  {shortenText(product?.desc)}
                 </p>
                 <div className="flex justify-between items-center">
                   <p className="text-2xl font-bold text-indigo-600">
-                    {product.prix}
+                    {product?.prix}
                   </p>
                   {/* {product.originalPrice && (
                     <p className="text-sm text-gray-400 line-through">

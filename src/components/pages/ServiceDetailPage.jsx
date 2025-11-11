@@ -95,7 +95,7 @@ const ServiceDetailPage = () => {
     }
 
     try {
-      await createData("devis", formData);
+      await createData("devis/", formData);
       toast.current.show({
         severity: "success",
         summary: "Succès",
@@ -112,7 +112,7 @@ const ServiceDetailPage = () => {
         message: "",
       });
     } catch (error) {
-      console.log("erreur", error);
+     
       toast.current.show({
         severity: "error",
         summary: "Erreur",
@@ -140,10 +140,7 @@ const ServiceDetailPage = () => {
           <div className="flex items-center space-x-6 mb-6">
             <div className="flex items-center justify-center w-20 h-20 rounded-2xl bg-indigo-100">
               <img
-                src={`${host}file/${service.PhotoService.img_serv.replace(
-                  "uploads/img/",
-                  ""
-                )}`}
+                src={service.img_serv}
                 alt=""
               />
             </div>
@@ -179,7 +176,7 @@ const ServiceDetailPage = () => {
                   Bénéficiaires
                 </h2>
                 <p className="text-gray-700 leading-relaxed">
-                  {service.beneficiare}
+                  {service.beneficiaire}
                 </p>
               </div>
 

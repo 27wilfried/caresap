@@ -25,7 +25,7 @@ const Login = () => {
         useName: user.data.data.nom,
         userId: user.data.data.id_client,
         dateCreated: user.data.data.createdAt,
-        token: user.data.token,
+        token: user.data.access,
       })
     );
   };
@@ -46,16 +46,18 @@ const Login = () => {
 
     try {
       setLoading(true);
-      const client = await createData("private/client/auth", {
+      const client = await createData("private/client/auth/", {
         email,
         password,
       });
 
       setActiveUser(client);
+      console.log('infos user',client)
+      
       toast.current.show({
         severity: "success",
         summary: "Succès",
-        detail: "Connexion réussie.",
+        detail: client?.data.message || "Connexion réussie.",
         life: 3000,
       });
 
@@ -65,16 +67,13 @@ const Login = () => {
         navigate("/user-dashboard");
       }
     } catch (error) {
+      console.log('error',error)
       toast.current.show({
         severity: "error",
         summary: "Erreur",
-        detail:
-          error?.data?.message ||
-          error?.response?.data?.message ||
-          "Erreur lors de l'authentification.",
-        life: 3000,
+        detail: error?.response?.data?.message || "Erreur lors de l'authentification.",life: 3000,
       });
-      console.log("error", error);
+     
     } finally {
       setLoading(false); // ✅ toujours exécuté (succès ou erreur)
     }

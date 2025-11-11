@@ -30,7 +30,7 @@ const ForgotPassword = () => {
     }
 
     try {
-      const client = await createData("private/client/forgot-password", {
+      const client = await createData("forgot-password/", {
         email,
       });
       toast.current.show({
@@ -48,7 +48,6 @@ const ForgotPassword = () => {
         summary: "Erreur",
         detail:
           error?.data?.message ||
-          error?.response?.data?.message ||
           "Erreur lors de l'envoi du lien de réenitialisation.",
         life: 3000,
       });

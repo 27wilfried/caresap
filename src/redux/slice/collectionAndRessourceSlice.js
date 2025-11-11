@@ -26,7 +26,7 @@ const collectionAndRessourceSlice = createSlice({
 
       // Récupérer tous les prix de toutes les ressources
       const allPrices = collections.flatMap((col) =>
-        col.Ressources.map((res) => res.prix)
+        col.ressources.map((res) => res.prix)
       );
 
       // Vérification si on a au moins un prix

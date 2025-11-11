@@ -109,7 +109,7 @@ const OrdersList = ({ orders, onSelectOrder, loading }) => {
                   {order?.id_vente}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {order?.Client?.nom}
+                  {order?.client?.nom}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {formatDate(order.date)}

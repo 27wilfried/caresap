@@ -15,13 +15,14 @@ const OrdersDashboard = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getData("private/vente/liste", {
+    getData("private/vente/liste/", {
       headers: {
         authorization: `Bearer ${token}`,
       },
     })
       .then((list) => {
-        setOrders(list);
+        console.log("order client",list)
+        setOrders(list?.data);
         setLoading(false);
       })
       .catch((err) => {

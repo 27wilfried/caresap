@@ -67,14 +67,15 @@ const ServicesDashboard = () => {
   const dispatch = useDispatch();
 
   const refetchPublication = async () => {
-    const service = await getData("private/service/liste", {
+    const service = await getData("private/service/liste/", {
       headers: {
         authorization: `Bearer ${token}`,
       },
     });
-    dispatch(STORE_SERVICES({ services: service }));
+    console.log("refesh service",service)
+    dispatch(STORE_SERVICES({ services: service?.data }));
   };
-
+console.log("services blabla",services)
   // Fonction utilitaire pour générer le FormData à partir d'un objet data
   const buildFormData = (data) => {
     const formData = new FormData();
@@ -82,9 +83,9 @@ const ServicesDashboard = () => {
     for (const key in data) {
       if (data[key] !== undefined && data[key] !== null && key !== "id_serv") {
         // Pour le champ photos, on n'ajoute que si c'est un File
-        if (key === "photos" && typeof data[key] !== "string") {
+        if (key === "img_serv" && typeof data[key] !== "string") {
           formData.append(key, data[key]);
-        } else if (key !== "photos") {
+        } else if (key !== "img_serv") {
           formData.append(key, data[key]);
         }
       }
@@ -96,10 +97,10 @@ const ServicesDashboard = () => {
     titre: "",
     desc: "",
     detail_service: "",
-    beneficiare: "",
+    beneficiaire: "",
     periode_standard: "",
     condition_application: "",
-    photos: "",
+    img_serv: "",
   });
 
   const resetForm = () => {
@@ -108,10 +109,10 @@ const ServicesDashboard = () => {
       titre: "",
       desc: "",
       detail_service: "",
-      beneficiare: "",
+      beneficiaire: "",
       periode_standard: "",
       condition_application: "",
-      photos: "",
+      img_serv: "",
     });
   };
 
@@ -125,10 +126,10 @@ const ServicesDashboard = () => {
       !newService.titre ||
       !newService.desc ||
       !newService.detail_service ||
-      !newService.beneficiare ||
+      !newService.beneficiaire ||
       !newService.periode_standard ||
       !newService.condition_application ||
-      !newService.photos
+      !newService.img_serv
     ) {
       toast.current?.show({
         severity: "warn",
@@ -144,16 +145,17 @@ const ServicesDashboard = () => {
     try {
       let retour;
 
-      retour = await createData("private/service", formDataToSend, {
+      retour = await createData("private/service/", formDataToSend, {
         headers: {
           authorization: `Bearer ${token}`,
         },
       });
+      console.log("serv",retour)
       toast.current.show({
         severity: "success",
         summary: "Succès",
         detail: `Le service ${
-          retour.data?.pub?.titre || ""
+          retour.data?.titre || ""
         } a été crée avec succès`,
         life: 3000,
       });
@@ -169,7 +171,6 @@ const ServicesDashboard = () => {
         summary: "Erreur",
         detail:
           error?.response?.data?.message ||
-          error?.data?.message ||
           "Erreur lors de l'opération, veuillez réessayer plus tard.",
         life: 3000,
       });
@@ -188,10 +189,10 @@ const ServicesDashboard = () => {
       !updatedService.titre ||
       !updatedService.desc ||
       !updatedService.detail_service ||
-      !updatedService.beneficiare ||
+      !updatedService.beneficiaire ||
       !updatedService.periode_standard ||
       !updatedService.condition_application ||
-      !updatedService.photos
+      !updatedService.img_serv
     ) {
       toast.current?.show({
         severity: "warn",
@@ -209,7 +210,7 @@ const ServicesDashboard = () => {
 
       retour = await updateData(
         updatedService.id_serv,
-        "private/service",
+        "private/update/service",
         formDataToSend,
         {
           headers: {
@@ -237,7 +238,6 @@ const ServicesDashboard = () => {
         summary: "Erreur",
         detail:
           error?.response?.data?.message ||
-          error?.data?.message ||
           "Erreur lors de l'opération, veuillez réessayer plus tard.",
         life: 3000,
       });
@@ -254,7 +254,7 @@ const ServicesDashboard = () => {
     ) {
       setLoading(true);
       try {
-        deleteData(service.id_serv, "private/service", {
+        deleteData(service.id_serv, "private/delete/service", {
           headers: {
             authorization: `Bearer ${token}`,
           },
@@ -277,7 +277,6 @@ const ServicesDashboard = () => {
           summary: "Erreur",
           detail:
             error?.response?.data?.message ||
-            error?.data?.message ||
             "Erreur lors de l'opération, veuillez réessayer plus tard.",
           life: 3000,
         });
@@ -297,10 +296,10 @@ const ServicesDashboard = () => {
       titre: initialData?.titre || "",
       desc: initialData?.desc || "",
       detail_service: initialData?.detail_service || "",
-      beneficiare: initialData?.beneficiare || "",
+      beneficiaire: initialData?.beneficiaire || "",
       periode_standard: initialData?.periode_standard || "",
       condition_application: initialData?.condition_application || "",
-      photos: initialData?.PhotoService?.img_serv || null,
+      img_serv: initialData?.img_serv || null,
       id_serv: initialData?.id_serv || undefined,
     });
 
@@ -310,10 +309,10 @@ const ServicesDashboard = () => {
         titre: initialData?.titre || "",
         desc: initialData?.desc || "",
         detail_service: initialData?.detail_service || "",
-        beneficiare: initialData?.beneficiare || "",
+        beneficiaire: initialData?.beneficiaire || "",
         periode_standard: initialData?.periode_standard || "",
         condition_application: initialData?.condition_application || "",
-        photos: initialData?.PhotoService?.img_serv || null,
+        img_serv: initialData?.img_serv || null,
         id_serv: initialData?.id_serv || undefined,
       });
     }, [initialData]);
@@ -326,7 +325,7 @@ const ServicesDashboard = () => {
     const handleImageChange = (e) => {
       const file = e.target.files[0];
       if (file) {
-        setFormData((prev) => ({ ...prev, photos: file }));
+        setFormData((prev) => ({ ...prev, img_serv: file }));
       }
     };
 
@@ -410,14 +409,14 @@ const ServicesDashboard = () => {
               Bénéficiaires
             </label>
             <textarea
-              name="beneficiare"
-              value={formData.beneficiare}
+              name="beneficiaire"
+              value={formData.beneficiaire}
               onChange={handleChange}
               rows="2"
               className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
               required
             ></textarea>
-            {submitted && formData.beneficiare === "" && (
+            {submitted && formData.beneficiaire === "" && (
               <span className="text-red-500 text-xs">
                 Veuillez renseigner un bénéfice
               </span>
@@ -488,24 +487,21 @@ const ServicesDashboard = () => {
               onChange={handleImageChange}
               className="mt-1 block w-full"
             />
-            {submitted && formData.photos === "" && (
+            {submitted && formData.img_serv === "" && (
               <span className="text-red-500 text-xs">
                 Veuillez sélectionner une image
               </span>
             )}
-            {formData.photos != null &&
-              (typeof formData.photos === "string" ? (
+            {formData.img_serv != null &&
+              (typeof formData.img_serv === "string" ? (
                 <img
-                  src={`${host}file/${formData.photos.replace(
-                    "uploads/img/",
-                    ""
-                  )}`}
+                  src={formData.img_serv}
                   alt="Aperçu"
                   className="mt-3 w-full h-48 object-cover rounded-lg"
                 />
               ) : (
                 <img
-                  src={URL.createObjectURL(formData.photos)}
+                  src={URL.createObjectURL(formData.img_serv)}
                   alt="Aperçu"
                   className="mt-3 w-full h-48 object-cover rounded-lg"
                 />
@@ -549,10 +545,10 @@ const ServicesDashboard = () => {
               titre: "",
               desc: "",
               detail_service: "",
-              beneficiare: "",
+              beneficiaire: "",
               periode_standard: "",
               condition_application: "",
-              photos: "",
+              img_serv: "",
             });
             setCloseForm(true);
           }}
@@ -576,20 +572,17 @@ const ServicesDashboard = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
         {services?.map((service) => (
           <div
-            key={service.id_serv}
+            key={service?.id_serv}
             className="bg-white p-6 rounded-2xl  border border-gray-100 hover:border-indigo-300 transition-colors"
           >
             <img
-              src={`${host}file/${service?.PhotoService?.img_serv?.replace(
-                "uploads/img/",
-                ""
-              )}`}
+              src={service?.img_serv}
               alt={service?.titre}
               className="w-full h-48 object-cover"
             />
             <div className="flex justify-between items-start mb-4">
               <h3 className="text-xl font-bold text-gray-900">
-                {service?.titre}
+                {shortenText(service.titre, 20)}
               </h3>
 
               <div className="flex space-x-2">

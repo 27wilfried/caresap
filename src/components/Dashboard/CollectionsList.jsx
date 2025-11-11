@@ -1,6 +1,6 @@
 import React from 'react';
 import { Plus, Edit, Trash } from 'lucide-react';
-import { host } from '../../helpers/fonctions';
+import { host,shortenText } from '../../helpers/fonctions';
 
 const CollectionsList = ({ collections, onSelectCollection, onEdit, onDelete, onAddNew }) => {
   return (
@@ -24,16 +24,13 @@ const CollectionsList = ({ collections, onSelectCollection, onEdit, onDelete, on
             <div onClick={() => onSelectCollection(collection.id_col)}>
              
               <img
-                src={`${host}file/${collection?.PhotoCollections[0]?.img_col?.replace(
-                  "uploads/img/",
-                  ""
-                )}`}
+                src={collection?.img_col}
                 alt={collection?.titre}
                 className="h-48 w-full object-cover group-hover:scale-105 transition-transform duration-300"
               />
               <div className="p-6">
                 <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-xl font-semibold text-gray-900">{collection.titre}</h3>
+                  <h3 className="text-xl font-semibold text-gray-900">{shortenText(collection.titre, 20)}</h3>
                   {collection.isNew && (
                     <span className="bg-green-100 text-green-800 text-xs font-medium px-2 py-0.5 rounded-full">
                       Nouveau

@@ -11,9 +11,9 @@ const Services = () => {
   const dispatch = useDispatch();
   const services = useSelector(selectServices);
   useEffect(() => {
-    getData("service/liste")
+    getData("private/service/liste")
       .then((list) => {
-        dispatch(STORE_SERVICES({ services: list }));
+        dispatch(STORE_SERVICES({ services: list?.data }));
         setLoading(false);
       })
       .catch((err) => {
@@ -60,18 +60,15 @@ const Services = () => {
                 <div className="bg-gray-50 p-8 rounded-2xl shadow-sm border border-gray-100 h-full flex flex-col transition-all duration-300 transform group-hover:shadow-lg group-hover:scale-[1.02]">
                   <div className="flex items-center justify-center w-16 h-16 rounded-xl bg-indigo-100 mb-6 transition-transform duration-300 group-hover:scale-110">
                     <img
-                      src={`${host}file/${service.PhotoService.img_serv.replace(
-                        "uploads/img/",
-                        ""
-                      )}`}
+                      src={service?.img_serv}
                       alt="image service"
                     />
                   </div>
                   <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                    {shortenText(service.titre, 50)}
+                    {shortenText(service.titre, 20)}
                   </h3>
                   <p className="text-gray-600 leading-relaxed mb-4 flex-grow">
-                    {shortenText(service.desc, 200)}
+                    {shortenText(service.desc, 100)}
                   </p>
                   <div className="mt-auto">
                     <span className="inline-flex items-center text-primary font-semibold group-hover:underline">

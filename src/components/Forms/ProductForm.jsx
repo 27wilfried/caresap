@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { ArrowLeft, Plus } from "lucide-react";
-import FileUploader from "../shared/FileUploader";
+import { ArrowLeft } from "lucide-react";
 import { Loader } from "rsuite";
-import { host } from "../../helpers/fonctions";
 
 const ProductForm = ({
   initialData,
@@ -12,18 +10,13 @@ const ProductForm = ({
   loading,
   submitted,
 }) => {
-  // Configuration des types de fichiers en fonction de la collection
-
+  
   const [formData, setFormData] = useState({
     titre: initialData?.titre || "",
     desc: initialData?.desc || "",
     prix: initialData?.prix || "",
-    photos: initialData?.PhotoRessource
-      ? initialData.PhotoRessource.img_res
-      : "",
-    documents: initialData?.DocRessource
-      ? initialData.DocRessource?.doc_res
-      : "",
+    img_res: initialData?.img_res || "",
+    documents: initialData?.docs?.length > 0 ? initialData.docs : [],
     id_col: collections?.id_col,
     id_res: initialData?.id_res || null,
     isNew: initialData?.isNew || false,
@@ -34,18 +27,15 @@ const ProductForm = ({
       titre: initialData?.titre || "",
       desc: initialData?.desc || "",
       prix: initialData?.prix || "",
-      photos: initialData?.PhotoRessource
-        ? initialData.PhotoRessource.img_res
-        : "",
-      documents: initialData?.DocRessource
-        ? initialData.DocRessource?.doc_res
-        : "",
+      img_res: initialData?.img_res || "",
+      documents: initialData?.docs?.length > 0 ? initialData.docs : [],
       id_col: collections?.id_col,
       id_res: initialData?.id_res || null,
       isNew: initialData?.isNew || false,
     });
   }, [initialData]);
 
+  // Gestion des champs textes
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
@@ -54,23 +44,36 @@ const ProductForm = ({
     }));
   };
 
+  // Image principale
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setFormData((prev) => ({ ...prev, photos: file }));
+      setFormData((prev) => ({ ...prev, img_res: file }));
     }
   };
 
+  // Documents multiples
   const handleDocChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setFormData((prev) => ({ ...prev, documents: file }));
+    const files = Array.from(e.target.files);
+    if (files.length > 0) {
+      setFormData((prev) => ({
+        ...prev,
+        documents: [...prev.documents, ...files], // ajout des nouveaux fichiers
+      }));
     }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     onSave(formData);
+  };
+
+  // Supprimer un document de la liste avant envoi
+  const removeDocument = (index) => {
+    setFormData((prev) => ({
+      ...prev,
+      documents: prev.documents.filter((_, i) => i !== index),
+    }));
   };
 
   return (
@@ -88,8 +91,9 @@ const ProductForm = ({
           <ArrowLeft size={24} />
         </button>
       </div>
+
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Champs de base */}
+        {/* Nom */}
         <div>
           <label className="block text-sm font-medium text-gray-700">
             Nom du produit
@@ -108,6 +112,8 @@ const ProductForm = ({
             </span>
           )}
         </div>
+
+        {/* Prix */}
         <div>
           <label className="block text-sm font-medium text-gray-700">
             Prix
@@ -122,22 +128,22 @@ const ProductForm = ({
           />
           {submitted && formData.prix === "" && (
             <span className="text-red-500 text-xs">
-              Veuillez renseigner prix
+              Veuillez renseigner un prix
             </span>
           )}
         </div>
 
+        {/* Description */}
         <div>
           <label className="block text-sm font-medium text-gray-700">
             Description
           </label>
-
           <textarea
             name="desc"
             value={formData.desc}
             onChange={handleChange}
             rows="2"
-            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm"
             required
           ></textarea>
           {submitted && formData.desc === "" && (
@@ -147,7 +153,7 @@ const ProductForm = ({
           )}
         </div>
 
-        {/* Uploader d'image de couverture */}
+        {/* Image principale */}
         <div>
           <label className="block text-sm font-medium text-gray-700">
             Photo
@@ -158,66 +164,77 @@ const ProductForm = ({
             onChange={handleImageChange}
             className="mt-1 block w-full"
           />
-          {submitted && formData.photos === "" && (
+          {submitted && !formData.img_res && (
             <span className="text-red-500 text-xs">
               Veuillez sélectionner une image
             </span>
           )}
-          {formData.photos &&
-            (typeof formData.photos === "string" ? (
-              <img
-                src={`${host}file/${formData.photos.replace(
-                  "uploads/img/",
-                  ""
-                )}`}
-                alt="Aperçu"
-                className="mt-3 w-full h-48 object-cover rounded-lg"
-              />
-            ) : (
-              <img
-                src={URL.createObjectURL(formData.photos)}
-                alt="Aperçu"
-                className="mt-3 w-full h-48 object-cover rounded-lg"
-              />
-            ))}
+          {formData.img_res && (
+            <img
+              src={
+                typeof formData.img_res === "string"
+                  ? formData.img_res
+                  : URL.createObjectURL(formData.img_res)
+              }
+              alt="Aperçu"
+              className="mt-3 w-full h-48 object-cover rounded-lg"
+            />
+          )}
         </div>
 
-        {/* Uploader du fichier de contenu (dynamique) */}
+        {/* Documents multiples */}
         <div>
           <label className="block text-sm font-medium text-gray-700">
-            Document (zip, pdf, docx)
+            Documents (pdf, docx, mp4, avi, mov, mkv)
           </label>
           <input
             type="file"
-            accept=".zip,.pdf,.doc,.docx,application/pdf,application/zip,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword"
+            multiple
+            accept=".pdf,.doc,.docx,.mp4,.avi,.mov,.mkv"
             onChange={handleDocChange}
             className="mt-1 block w-full"
           />
-          {submitted && formData.documents === "" && (
+          {submitted && formData.documents.length === 0 && (
             <span className="text-red-500 text-xs">
-              Veuillez sélectionner un document (zip, pdf, docx)
+              Veuillez sélectionner au moins un document
             </span>
           )}
-          {formData.documents &&
-            (typeof formData.documents === "string" ? (
-              <a
-                href={`${host}file/${formData.documents.replace(
-                  "uploads/doc/",
-                  ""
-                )}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-3 block text-blue-600 underline"
-              >
-                Télécharger le document
-              </a>
-            ) : (
-              <span className="mt-3 block text-gray-700">
-                {formData.documents.name}
-              </span>
-            ))}
+
+          {formData.documents.length > 0 && (
+            <ul className="mt-3 space-y-2">
+              {formData.documents.map((doc, index) => (
+                <li
+                  key={index}
+                  className="flex items-center justify-between text-sm bg-gray-50 px-3 py-2 rounded-lg border"
+                >
+                  <span className="truncate">
+                    {typeof doc === "string" ? (
+                      <a
+                        href={doc}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 underline"
+                      >
+                        {doc.split("/").pop()}
+                      </a>
+                    ) : (
+                      doc.name
+                    )}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => removeDocument(index)}
+                    className="text-red-500 hover:text-red-700 text-xs"
+                  >
+                    Supprimer
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
 
+        {/* Boutons */}
         <div className="flex space-x-4">
           <button
             type="submit"

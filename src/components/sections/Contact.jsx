@@ -30,11 +30,11 @@ const Contact = () => {
     setLoading(true);
     
     try {
-      await createData("contact", formData);
+      await createData("contact/", formData);
 
       toast.current.show({
         severity: "success",
-        summary: "Erreur",
+        summary: "Succès",
         detail: "Message envoyé avec succès.",
         life: 3000,
       });
@@ -144,7 +144,7 @@ const Contact = () => {
               value={formData.message}
               onChange={handleChange}
               name="message"
-              rows="6"
+              rows="3"
               className="w-full px-5 py-4 border border-gray-300 rounded-xl focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors duration-200"
             ></textarea>
           </div>

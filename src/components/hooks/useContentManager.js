@@ -26,7 +26,7 @@ export const useContentManager = () => {
 
   const dispatch = useDispatch();
   const refetchCollection = async () => {
-    const collection = await getData("private/collection/liste", {
+    const collection = await getData("private/collection/liste/", {
       headers: {
         authorization: `Bearer ${token}`,
       },
@@ -40,20 +40,29 @@ export const useContentManager = () => {
 
   const buildFormData = (data) => {
     const formData = new FormData();
+
     for (const key in data) {
       if (data[key] !== undefined && data[key] !== null && key !== "id_col") {
-        // Ajoute les fichiers seulement si ce sont des objets File
-        if (
-          (key === "photos" || key === "documents") &&
+        if (key === "documents" && Array.isArray(data[key])) {
+          // Plusieurs fichiers
+          data[key].forEach((file) => {
+            formData.append("documents", file);
+          });
+        } else if (
+          (key === "img_res" || key === "img_col") &&
           data[key] instanceof File
         ) {
           formData.append(key, data[key]);
-        } else if (key !== "photos" && key !== "documents") {
+        } else if (
+          key !== "img_res" &&
+          key !== "img_col" &&
+          key !== "documents"
+        ) {
           formData.append(key, data[key]);
         }
       }
     }
-    // Ajoute id_col explicitement si besoin
+
     if (data.id_col) formData.append("id_col", data.id_col);
     return formData;
   };
@@ -61,7 +70,7 @@ export const useContentManager = () => {
   const handleAddCollection = async (newCollection) => {
     setLoading(true);
     setSubmitted(true);
-    if (!newCollection.titre || !newCollection.photos) {
+    if (!newCollection.titre || !newCollection.img_col) {
       toast.error("Veuillez remplir tous les champs obligatoires.", {
         position: "top-left",
       });
@@ -72,7 +81,7 @@ export const useContentManager = () => {
     try {
       let retour;
 
-      retour = await createData("private/collection", formDataToSend, {
+      retour = await createData("private/collection/", formDataToSend, {
         headers: {
           authorization: `Bearer ${token}`,
         },
@@ -105,7 +114,7 @@ export const useContentManager = () => {
     console.log("updating", updatedCollection);
     setLoading(true);
     setSubmitted(true);
-    if (!updatedCollection.titre || !updatedCollection.photos) {
+    if (!updatedCollection.titre || !updatedCollection.img_col) {
       toast.error("Veuillez remplir tous les champs obligatoires.", {
         position: "top-left",
       });
@@ -118,7 +127,7 @@ export const useContentManager = () => {
 
       retour = await updateData(
         updatedCollection.id_col,
-        "private/collection",
+        "private/update/collection",
         formDataToSend,
         {
           headers: {
@@ -150,7 +159,7 @@ export const useContentManager = () => {
       )
     ) {
       try {
-        deleteData(collection.id_col, "private/collection", {
+        deleteData(collection.id_col, "private/delete/collection", {
           headers: {
             authorization: `Bearer ${token}`,
           },
@@ -179,8 +188,8 @@ export const useContentManager = () => {
       !newProduct.desc ||
       !newProduct.prix ||
       !newProduct.id_col ||
-      !newProduct.documents ||
-      !newProduct.photos
+      !newProduct.documents.length === 0 ||
+      !newProduct.img_res
     ) {
       toast.error("Veuillez remplir tous les champs obligatoires.", {
         position: "top-left",
@@ -188,12 +197,13 @@ export const useContentManager = () => {
       setLoading(false);
       return;
     }
+    console.log("infos product create", newProduct);
     const formDataToSend = buildFormData(newProduct);
 
     try {
       let retour;
 
-      retour = await createData("private/ressource", formDataToSend, {
+      retour = await createData("private/ressource/", formDataToSend, {
         headers: {
           authorization: `Bearer ${token}`,
         },
@@ -231,8 +241,8 @@ export const useContentManager = () => {
       !updatedProduct.desc ||
       !updatedProduct.prix ||
       !updatedProduct.id_col ||
-      !updatedProduct.documents ||
-      !updatedProduct.photos
+      !updatedProduct.documents.length === 0 ||
+      !updatedProduct.img_res
     ) {
       toast.current?.show({
         severity: "warn",
@@ -243,13 +253,21 @@ export const useContentManager = () => {
       setLoading(false);
       return;
     }
+
     const formDataToSend = buildFormData(updatedProduct);
+
+    // 🔍 Log clair du contenu FormData
+    // console.log("infos product multi doc (détail) :");
+    // for (let pair of formDataToSend.entries()) {
+    //   console.log(pair[0], pair[1]);
+    // }
+
     try {
       let retour;
 
       retour = await updateData(
         updatedProduct.id_res,
-        "private/ressource",
+        "private/update/ressource",
         formDataToSend,
         {
           headers: {
@@ -281,7 +299,7 @@ export const useContentManager = () => {
       )
     ) {
       try {
-        deleteData(product.id_res, "private/ressource", {
+        deleteData(product.id_res, "private/delete/ressource", {
           headers: {
             authorization: `Bearer ${token}`,
           },

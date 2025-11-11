@@ -74,7 +74,7 @@ const PostForm = ({
     desc: initialData?.desc || "",
     auteur: initialData?.auteur || "",
     id_cat: initialData?.id_cat || "",
-    photos: initialData?.PhotoPub?.img_pub || null,
+    img_pub: initialData?.img_pub || null,
     id_pub: initialData?.id_pub || undefined,
   });
 
@@ -86,13 +86,13 @@ const PostForm = ({
       desc: initialData?.desc || "",
       auteur: initialData?.auteur || "",
       id_cat: initialData?.id_cat || "",
-      photos: initialData?.PhotoPub?.img_pub || null,
+      img_pub: initialData?.img_pub || null,
       id_pub: initialData?.id_pub || undefined,
     });
   }, [initialData]);
 
   const [preview, setPreview] = useState(
-    initialData?.PhotoPub?.img_pub || null
+    initialData?.img_pub || null
   );
 
   const handleChange = (e) => {
@@ -108,7 +108,7 @@ const PostForm = ({
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setFormData((prev) => ({ ...prev, photos: file }));
+      setFormData((prev) => ({ ...prev, img_pub: file }));
       setPreview(URL.createObjectURL(file));
     }
   };
@@ -221,24 +221,21 @@ const PostForm = ({
             onChange={handleImageChange}
             className="mt-1 block w-full"
           />
-          {formData.photos != null &&
-            (typeof formData.photos === "string" ? (
+          {formData.img_pub != null &&
+            (typeof formData.img_pub === "string" ? (
               <img
-                src={`${host}file/${formData.photos.replace(
-                  "uploads/img/",
-                  ""
-                )}`}
+                src={formData.img_pub}
                 alt="Aperçu"
                 className="mt-3 w-full h-48 object-cover rounded-lg"
               />
             ) : (
               <img
-                src={URL.createObjectURL(formData.photos)}
+                src={URL.createObjectURL(formData.img_pub)}
                 alt="Aperçu"
                 className="mt-3 w-full h-48 object-cover rounded-lg"
               />
             ))}
-          {submitted && formData.photos === null && (
+          {submitted && formData.img_pub === null && (
             <span className="text-red-500 text-xs">
               Veuillez selectionner une image
             </span>
@@ -299,7 +296,7 @@ const BlogDashboard = () => {
     desc: "",
     auteur: "",
     id_cat: "",
-    photos: "",
+    img_pub: "",
   });
   const [showConfirm, setShowConfirm] = useState(false);
   const [postToDelete, setPostToDelete] = useState({});
@@ -313,8 +310,8 @@ const BlogDashboard = () => {
   const uniquePub = [];
   const seen = new Set();
   publication.forEach((pub) => {
-    const id = pub?.CategoriePub?.id_cat;
-    const nom = pub?.CategoriePub?.nom;
+    const id = pub?.id_cat;
+    const nom = pub?.categorie_nom;
     if (id && !seen.has(id)) {
       uniquePub.push({ id_cat: id, nom });
       seen.add(id);
@@ -328,7 +325,7 @@ const BlogDashboard = () => {
       desc: "",
       auteur: "",
       id_cat: "",
-      photos: "",
+      img_pub: "",
     });
     setShowForm(true);
   };
@@ -346,7 +343,7 @@ const BlogDashboard = () => {
   const confirmDelete = () => {
     setLoading(true);
     try {
-      deleteData(postToDelete.id_pub, "private/publication", {
+      deleteData(postToDelete.id_pub, "private/publication/delete", {
         headers: {
           authorization: `Bearer ${token}`,
         },
@@ -379,7 +376,7 @@ const BlogDashboard = () => {
   };
 
   const refetchPublication = async () => {
-    const pub = await getData("private/publication/liste", {
+    const pub = await getData("private/publication/liste-et-creaction/", {
       headers: {
         authorization: `Bearer ${token}`,
       },
@@ -393,9 +390,9 @@ const BlogDashboard = () => {
     for (const key in data) {
       if (data[key] !== undefined && data[key] !== null && key !== "id_pub") {
         // Pour le champ photos, on n'ajoute que si c'est un File
-        if (key === "photos" && typeof data[key] !== "string") {
+        if (key === "img_pub" && typeof data[key] !== "string") {
           formData.append(key, data[key]);
-        } else if (key !== "photos") {
+        } else if (key !== "img_pub") {
           formData.append(key, data[key]);
         }
       }
@@ -414,7 +411,7 @@ const BlogDashboard = () => {
       !data.desc ||
       !data.auteur ||
       !data.id_cat ||
-      !data.photos
+      !data.img_pub
     ) {
       toast.current?.show({
         severity: "warn",
@@ -431,7 +428,7 @@ const BlogDashboard = () => {
     try {
       let retour;
       if (data.id_pub) {
-        retour = await updateData(data.id_pub, "private/publication", formDataToSend, {
+        retour = await updateData(data.id_pub, "private/publication/update", formDataToSend, {
           headers: {
             authorization: `Bearer ${token}`,
           },
@@ -445,7 +442,7 @@ const BlogDashboard = () => {
           life: 3000,
         });
       } else {
-        retour = await createData("private/publication", formDataToSend, {
+        retour = await createData("private/publication/liste-et-creaction/", formDataToSend, {
           headers: {
             authorization: `Bearer ${token}`,
           },
@@ -512,10 +509,7 @@ const BlogDashboard = () => {
               className="bg-white rounded-xl shadow-md overflow-hidden"
             >
               <img
-                src={`${host}file/${post?.PhotoPub?.img_pub?.replace(
-                  "uploads/img/",
-                  ""
-                )}`}
+                src={post?.img_pub}
                 alt={post?.titre}
                 className="w-full h-48 object-cover"
               />

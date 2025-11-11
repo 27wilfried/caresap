@@ -14,10 +14,7 @@ const CollectionForm = ({
   const [formData, setFormData] = useState({
     titre: initialData?.titre || "",
     isNew: initialData?.isNew || false,
-    photos:
-      initialData?.PhotoCollections && initialData.PhotoCollections.length > 0
-        ? initialData.PhotoCollections[0].img_col
-        : "",
+    img_col: initialData?.img_col ? initialData.img_col : "",
     id_col: initialData?.id_col || undefined,
   });
 
@@ -26,10 +23,7 @@ const CollectionForm = ({
     setFormData({
       titre: initialData?.titre || "",
       isNew: initialData?.isNew || false,
-      photos:
-        initialData?.PhotoCollections && initialData.PhotoCollections.length > 0
-          ? initialData.PhotoCollections[0].img_col
-          : "",
+      img_col: initialData?.img_col ? initialData.img_col : "",
       id_col: initialData?.id_col || undefined,
     });
   }, [initialData]);
@@ -37,7 +31,7 @@ const CollectionForm = ({
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setFormData((prev) => ({ ...prev, photos: file }));
+      setFormData((prev) => ({ ...prev, img_col: file }));
     }
   };
 
@@ -98,24 +92,21 @@ const CollectionForm = ({
             onChange={handleImageChange}
             className="mt-1 block w-full"
           />
-          {submitted && formData.photos === "" && (
+          {submitted && formData.img_col === "" && (
             <span className="text-red-500 text-xs">
               Veuillez sélectionner une image
             </span>
           )}
-          {formData.photos &&
-            (typeof formData.photos === "string" ? (
+          {formData.img_col &&
+            (typeof formData.img_col === "string" ? (
               <img
-                src={`${host}file/${formData.photos.replace(
-                  "uploads/img/",
-                  ""
-                )}`}
+                src={formData.img_col}
                 alt="Aperçu"
                 className="mt-3 w-full h-48 object-cover rounded-lg"
               />
             ) : (
               <img
-                src={URL.createObjectURL(formData.photos)}
+                src={URL.createObjectURL(formData.img_col)}
                 alt="Aperçu"
                 className="mt-3 w-full h-48 object-cover rounded-lg"
               />

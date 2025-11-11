@@ -12,19 +12,24 @@ import {
   FILTER_BY_CATEGORIE_PUBLICATIONS,
   selectFilteredPublications,
 } from "../../redux/slice/filterPubSlice";
-import { formatDate, getData, host, shortenText } from "../../helpers/fonctions";
+import {
+  formatDate,
+  getData,
+  host,
+  shortenText,
+} from "../../helpers/fonctions";
 
 const Blog = () => {
   const [category, setCategory] = useState("Tous");
   const [loadingPub, setLoadingPub] = useState(true);
- 
+
   const publications = useSelector(selectPublications);
   const resultsFilteredPub = useSelector(selectFilteredPublications);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    getData("publication/liste")
+    getData("private/publication/liste-et-creaction/")
       .then((list) => {
         dispatch(STORE_PUBLICATIONS({ publications: list }));
         setLoadingPub(false);
@@ -43,8 +48,8 @@ const Blog = () => {
   const uniquePub = [];
   const seen = new Set();
   publications?.forEach((pub) => {
-    const id = pub?.CategoriePub?.id_cat;
-    const nom = pub?.CategoriePub?.nom;
+    const id = pub?.id_cat;
+    const nom = pub?.categorie_nom;
     if (id && !seen.has(id)) {
       uniquePub.push({ id_cat: id, nom });
       seen.add(id);
@@ -136,10 +141,7 @@ const Blog = () => {
               >
                 <div className="relative h-56 overflow-hidden">
                   <img
-                    src={`${host}file/${post?.PhotoPub?.img_pub?.replace(
-                      "uploads/img/",
-                      ""
-                    )}`}
+                    src={post?.img_pub}
                     alt={post?.titre}
                     className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
                   />

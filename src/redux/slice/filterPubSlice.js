@@ -34,7 +34,7 @@ const filterPubSlice = createSlice({
         tempPublications = publications;
       } else {
         tempPublications = publications.filter(
-          (c) => c.CategoriePub.nom === category
+          (c) => c.categorie_nom === category
         );
       }
 

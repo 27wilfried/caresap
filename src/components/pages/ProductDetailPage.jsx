@@ -15,10 +15,10 @@ const ProductDetailPage = () => {
   const collection = allCollection.find(
     (col) => col.id_col === parseInt(id_col)
   );
-  const detailRessources = collection.Ressources.filter(
+  const detailRessources = collection.ressources.filter(
     (res) => res.id_res === parseInt(id_res)
   );
-  const autresRessources = collection.Ressources.filter(
+  const autresRessources = collection.ressources.filter(
     (res) => res.id_res !== parseInt(id_res)
   );
   const dispatch = useDispatch();
@@ -78,10 +78,7 @@ const ProductDetailPage = () => {
           {/* Image du produit */}
           <div className="relative h-96 lg:h-auto rounded-3xl overflow-hidden shadow-xl border border-gray-100">
             <img
-              src={`${host}file/${detailRessources[0]?.PhotoRessource?.img_res?.replace(
-                "uploads/img/",
-                ""
-              )}`}
+              src={detailRessources[0]?.img_res}
               alt={detailRessources[0].titre}
               className="w-full h-full object-cover transform scale-105"
             />
@@ -151,38 +148,37 @@ const ProductDetailPage = () => {
         </section>
 
         {/* Section des produits recommandés (implémentation simplifiée) */}
-        <section className="mt-16 border-t border-gray-200 pt-16">
-          <h2 className="text-3xl font-bold text-gray-900 mb-8">
-            Vous pourriez aussi aimer
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-            {autresRessources.map((item, index) => (
-              <div
-                key={index}
-                className="bg-white rounded-2xl shadow-lg overflow-hidden group"
-              >
-                <Link to={`/formations/${item.id_col}`}>
-                  <img
-                    src={`${host}file/${item?.PhotoRessource?.img_res?.replace(
-                      "uploads/img/",
-                      ""
-                    )}`}
-                    alt={item.titre}
-                    className="h-48 w-full object-cover group-hover:scale-105 transition-transform"
-                  />
-                  <div className="p-6">
-                    <h3 className="text-lg font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
-                      {item.titre}
-                    </h3>
-                    <p className="text-sm text-gray-600 mt-2">
-                      {shortenText(item.desc, 100)}
-                    </p>
-                  </div>
-                </Link>
-              </div>
-            ))}
-          </div>
-        </section>
+        {autresRessources.length > 0 && (
+          <section className="mt-16 border-t border-gray-200 pt-16">
+            <h2 className="text-3xl font-bold text-gray-900 mb-8">
+              Vous pourriez aussi aimer
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+              {autresRessources.map((item, index) => (
+                <div
+                  key={index}
+                  className="bg-white rounded-2xl shadow-lg overflow-hidden group"
+                >
+                  <Link to={`/formations/${item.id_col}`}>
+                    <img
+                      src={item?.img_res}
+                      alt={item?.titre}
+                      className="h-48 w-full object-cover group-hover:scale-105 transition-transform"
+                    />
+                    <div className="p-6">
+                      <h3 className="text-lg font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
+                        {item?.titre}
+                      </h3>
+                      <p className="text-sm text-gray-600 mt-2">
+                        {shortenText(item?.desc, 100)}
+                      </p>
+                    </div>
+                  </Link>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
       </main>
     </div>
   );

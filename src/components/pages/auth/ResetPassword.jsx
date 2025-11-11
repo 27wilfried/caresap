@@ -47,7 +47,7 @@ const ResetPassword = () => {
     }
 
     try {
-      const client = await createData("private/client/reset-password", {
+      const client = await createData("reset-password/", {
         token,
         newPassword: password,
       });

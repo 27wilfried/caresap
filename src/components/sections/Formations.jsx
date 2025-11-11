@@ -15,8 +15,9 @@ const Formations = () => {
   const collections = useSelector(selectCollectionsAndRessources);
 
   useEffect(() => {
-    getData("collection/liste")
+    getData("private/collection/liste/")
       .then((list) => {
+       
         dispatch(
           STORE_COLLECTIONS_AND_RESSOURCES({ collections_and_ressources: list })
         );
@@ -73,14 +74,11 @@ const Formations = () => {
               <Link
                 key={index}
                 to={`/formations/${collection.id_col}`}
-                className="group relative flex-shrink-0 w-72 h-96 rounded-2xl overflow-hidden shadow-xl border border-gray-200 transform transition-all duration-500 hover:scale-105 hover:shadow-2xl bg-white"
+                className="group relative flex-shrink-0 w-72 rounded-2xl overflow-hidden shadow-xl border border-gray-200 transform transition-all duration-500 hover:scale-105 hover:shadow-2xl bg-white"
               >
                 <div className="relative h-64 overflow-hidden">
                   <img
-                    src={`${host}file/${collection?.PhotoCollections[0]?.img_col?.replace(
-                      "uploads/img/",
-                      ""
-                    )}`}
+                    src={collection?.img_col}
                     alt={collection.titre}
                     className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
@@ -98,13 +96,13 @@ const Formations = () => {
                     <h3 className="text-2xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors duration-300">
                       {collection.titre}
                     </h3>
-                    <p className="text-sm text-gray-600 mb-3">
-                      {collection?.Ressources?.length} ressource
-                      {collection?.Ressources?.length > 1 ? "s" : ""}
-                    </p>
+                    {/* <p className="text-sm text-gray-600 mb-3">
+                      {collection?.ressources?.length} ressource
+                      {collection?.ressources?.length > 1 ? "s" : ""}
+                    </p> */}
                   </div>
 
-                  <div className="">
+                  {/* <div className="">
                     <button className="flex items-center text-blue-600 font-semibold group-hover:text-blue-800 transition-colors duration-300">
                       Découvrir
                       <ArrowRight
@@ -112,7 +110,7 @@ const Formations = () => {
                         className="ml-2 transform group-hover:translate-x-1 transition-transform duration-300"
                       />
                     </button>
-                  </div>
+                  </div> */}
                 </div>
               </Link>
             );

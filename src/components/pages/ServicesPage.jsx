@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { selectServices } from "../../redux/slice/serviceSlice";
 import { useSelector } from "react-redux";
-import { host } from "../../helpers/fonctions";
+import { host, shortenText } from "../../helpers/fonctions";
 
 const ServicesPage = () => {
   const services = useSelector(selectServices);
@@ -11,7 +11,6 @@ const ServicesPage = () => {
     <div className="py-12 md:py-24">
       <div className="container mx-auto px-4 sm:px-6">
         <div className="text-center max-w-2xl mx-auto mb-12 md:mb-16">
-
           <h2 className="text-4xl lg:text-5xl font-extrabold text-gray-900 leading-tight pb-4">
             Tous nos <span className="text-primary">services</span>
           </h2>
@@ -31,19 +30,13 @@ const ServicesPage = () => {
             >
               <div className="bg-gray-50 p-8 rounded-2xl shadow-sm border border-gray-100 h-full flex flex-col transition-all duration-300 transform group-hover:shadow-lg group-hover:scale-[1.02]">
                 <div className="flex items-center justify-center w-16 h-16 rounded-xl bg-indigo-100 mb-6 transition-transform duration-300 group-hover:scale-110">
-                  <img
-                    src={`${host}file/${service.PhotoService.img_serv.replace(
-                      "uploads/img/",
-                      ""
-                    )}`}
-                    alt="image service"
-                  />
+                  <img src={service?.img_serv} alt="image service" />
                 </div>
                 <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                  {service.titre}
+                  {shortenText(service.titre, 20)}
                 </h3>
                 <p className="text-gray-600 leading-relaxed mb-4 flex-grow">
-                  {service.desc}
+                  {shortenText(service.desc, 30)}
                 </p>
                 <div className="mt-auto">
                   <span className="inline-flex items-center text-primary font-semibold group-hover:underline">

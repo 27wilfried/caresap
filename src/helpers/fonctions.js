@@ -32,10 +32,10 @@ export const isNew = (createdAt) => {
   return diffInDays < 30;
 };
 
-// export const host = "http://localhost:5000/";
+export const host = "http://127.0.0.1:8080/api/";
 //export const host = "http://172.17.211.121:5000/";
-// export const host = "https://back.node.caresap.org/";
-export const host = "http://192.168.100.9:5000/";
+// export const host = "https://caresap.org/api/";
+// export const host = "http://192.168.100.9:5000/";
 
 export const getData = async (type, config = {}) => {
   return new Promise(async (resolve, reject) => {
@@ -91,7 +91,7 @@ export const updateData = async (k, path, body, config = {}) => {
           "Content-Type": "application/json",
         };
       }
-      await axios.put(host + `${path}/${k}`, body, config).then((elt) => {
+      await axios.put(host + `${path}/${k}/`, body, config).then((elt) => {
         resolve(elt);
       });
     } catch (error) {
@@ -104,7 +104,7 @@ export const updateData = async (k, path, body, config = {}) => {
 export const deleteData = async (k, path, config = {}) => {
   return new Promise(async (resolve, reject) => {
     try {
-      await axios.delete(host + `${path}/${k}`, config).then((elt) => {
+      await axios.delete(host + `${path}/${k}/`, config).then((elt) => {
         resolve({ etat: "success", ret: elt });
       });
     } catch (error) {

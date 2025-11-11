@@ -34,7 +34,7 @@ const CartSummary = ({ montant }) => {
     console.log("Déclenchement remboursement pour transaction:", transactionId);
 
     try {
-      const refundRes = await fetch(`${host}/api/kkiapay/refund`, {
+      const refundRes = await fetch(`${host}api/kkiapay/refund`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ transactionId }),
@@ -65,7 +65,7 @@ const CartSummary = ({ montant }) => {
     }
 
     // Vérifier le paiement côté serveur
-    fetch(`${host}/api/kkiapay/verify`, {
+    fetch(`${host}api/kkiapay/verify`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ transactionId: response.transactionId }),
@@ -102,7 +102,7 @@ const CartSummary = ({ montant }) => {
 
             clearCart();
             navigate("/payment");
-            toast.error("Commande effectuée avec succès.", {
+            toast.success("Commande effectuée avec succès.", {
               position: "top-left",
             });
           } catch (error) {
@@ -174,7 +174,7 @@ const CartSummary = ({ montant }) => {
       <button
         className="mt-6 w-full py-3 px-4 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition-colors"
         onClick={
-          () => (isLogin ? open() : navigate("/auth")) // Ouvre le widget Kkiapay
+          () => (isLogin ? open() : navigate("/login")) // Ouvre le widget Kkiapay
         }
       >
         Passer à la caisse

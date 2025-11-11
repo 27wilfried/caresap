@@ -30,7 +30,7 @@ const BlogDetailPage = () => {
       const related = publications
         .filter(
           (p) =>
-            p.CategoriePub.id_cat === foundPost.CategoriePub.id_cat &&
+            p.id_cat === foundPost.id_cat &&
             p.id_pub !== foundPost.id_pub
         )
         .slice(0, 3);
@@ -105,10 +105,7 @@ const BlogDetailPage = () => {
             <div className="lg:col-span-2">
               <div className="relative rounded-3xl overflow-hidden shadow-xl mb-8">
                 <img
-                  src={`${host}file/${post?.PhotoPub?.img_pub?.replace(
-                    "uploads/img/",
-                    ""
-                  )}`}
+                  src={post?.img_pub}
                   alt={post.titre}
                   className="w-full h-auto object-cover"
                 />
@@ -134,16 +131,13 @@ const BlogDetailPage = () => {
                         className="flex items-start group hover:bg-gray-50 p-3 rounded-2xl transition-colors duration-200"
                       >                       
                         <img
-                          src={`${host}file/${relatedPost?.PhotoPub?.img_pub?.replace(
-                            "uploads/img/",
-                            ""
-                          )}`}
+                          src={relatedPost?.img_pub}
                           alt={relatedPost.titre}
                           className="w-24 h-16 object-cover rounded-xl flex-shrink-0"
                         />
                         <div className="ml-4">
                           <p className="text-sm text-primary font-semibold">
-                            {relatedPost.CategoriePub.nom}
+                            {relatedPost.categorie_nom}
                           </p>
                           <h4 className="text-lg font-bold text-gray-900 leading-tight group-hover:text-primary transition-colors duration-300">
                             {relatedPost.titre}

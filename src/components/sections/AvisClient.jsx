@@ -7,8 +7,9 @@ const AvisClient = () => {
   const [avis, setAvis] = useState([]);
   const [loadingAvis, setLoadingAvis] = useState(true);
   useEffect(() => {
-    getData("avis/liste")
+    getData("private/avis/liste/")
       .then((list) => {
+  
         setAvis(list.data);
         setLoadingAvis(false);
       })
@@ -108,13 +109,7 @@ const AvisClient = () => {
                       <div className="relative">
                         <img
                           src={
-                            review?.PhotoAvi?.img_avis
-                              ? `${host}file/${review.PhotoAvi.img_avis.replace(
-                                  "uploads/img/",
-                                  ""
-                                )}`
-                              : "/images/default-avatar.avif" // image par défaut si pas de photo
-                          }
+                            review?.img_avis }
                           alt={review?.nom || "Client"}
                           className="w-16 h-16 rounded-2xl object-cover shadow-md ring-4 ring-white"
                         />
@@ -175,12 +170,7 @@ const AvisClient = () => {
                     <img
                       key={i}
                       src={
-                        review?.PhotoAvi?.img_avis
-                          ? `${host}file/${review.PhotoAvi.img_avis.replace(
-                              "uploads/img/",
-                              ""
-                            )}`
-                          : "/images/default-avatar.avif"
+                        review?.img_avis 
                       }
                       alt={review.nom || "Client"}
                       className="w-12 h-12 rounded-full border-3 border-white shadow-sm object-cover"

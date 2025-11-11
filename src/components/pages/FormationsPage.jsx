@@ -69,7 +69,7 @@ const FormationsPage = () => {
   const excludeEmpty = true;
   const filteredCollections = excludeEmpty
     ? collections
-        .filter((col) => col.Ressources?.length > 0)
+        .filter((col) => col.ressources?.length > 0)
         .map((col) => ({ id_col: col.id_col, titre: col.titre }))
     : uniqueCollections;
 
@@ -227,7 +227,7 @@ const FormationsPage = () => {
                     className="block appearance-none w-full bg-gray-100 border border-gray-200 text-gray-700 py-2.5 px-4 pr-8 rounded-lg leading-tight focus:outline-none focus:bg-white focus:border-gray-500 text-sm"
                   >
                     {allCollections.map((cat) => (
-                      <option value={`${cat.titre}`}>{cat.titre}</option>
+                      <option value={`${cat?.titre}`}>{cat?.titre}</option>
                     ))}
                   </select>
                   <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
@@ -273,21 +273,18 @@ const FormationsPage = () => {
         {resultsFilteredCollections.length > 0 ? (
           resultsFilteredCollections.map((collection) => {
             return (
-              collection.Ressources.length > 0 && (
+              collection.ressources.length > 0 && (
                 <div key={collection.id_col} className="mb-12">
                   <div className="flex items-center mb-6">
                     <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mr-4">
                       <img
-                        src={`${host}file/${collection?.PhotoCollections[0]?.img_col?.replace(
-                          "uploads/img/",
-                          ""
-                        )}`}
-                        alt={collection.titre}
+                        src={collection?.img_col}
+                        alt={collection?.titre}
                         className=""
                       />
                     </div>
                     <h2 className="text-3xl font-bold text-gray-900">
-                      {collection.titre}
+                      {collection?.titre}
                     </h2>
                   </div>
                   <div
@@ -297,10 +294,10 @@ const FormationsPage = () => {
                         : "grid-cols-1"
                     }`}
                   >
-                    {collection.Ressources.map((res) => {
+                    {collection.ressources.map((res) => {
                       return (
                         <div
-                          key={res.id_res}
+                          key={res?.id_res}
                           className={`group bg-white rounded-2xl shadow-sm border border-gray-100 transition-all duration-300 transform hover:shadow-xl hover:scale-[1.02] hover:-translate-y-1 overflow-hidden ${
                             viewMode === "list"
                               ? "flex flex-row items-center p-4"
@@ -317,11 +314,8 @@ const FormationsPage = () => {
                           >
                             
                             <img
-                              src={`${host}file/${res?.PhotoRessource?.img_res?.replace(
-                                "uploads/img/",
-                                ""
-                              )}`}
-                              alt={res.titre}
+                              src={res?.img_res}
+                              alt={res?.titre}
                               className={`object-cover transition-transform duration-500 group-hover:scale-110 ${
                                 viewMode === "list"
                                   ? "w-full h-32"
@@ -354,20 +348,20 @@ const FormationsPage = () => {
                             </div>
 
                             <p className="text-gray-600 leading-relaxed text-sm mb-4 flex-grow">
-                              {shortenText(res.desc,200) }
+                              {shortenText(res?.desc,200) }
                             </p>
 
                             <div className="mt-auto pt-4 border-t border-gray-100/50 flex items-center justify-between">
                               <div className="flex flex-col">
                                 <span className="text-2xl font-bold text-gray-900">
-                                  {res.prix} fcfa
+                                  {res?.prix} fcfa
                                 </span>
                                 <span className="text-xs text-gray-500 capitalize">
-                                  {collection.titre}
+                                  {collection?.titre}
                                 </span>
                               </div>
                               <Link
-                                to={`/formations/${collection.id_col}/${res.id_res}`}
+                                to={`/formations/${collection?.id_col}/${res?.id_res}`}
                                 className="inline-flex items-center px-4 py-2.5 text-white bg-primary rounded-xl font-medium text-sm hover:shadow-lg hover:shadow-blue-500/25 transition-all duration-300 group/btn transform hover:scale-105"
                               >
                                 Voir

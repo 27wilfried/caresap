@@ -30,18 +30,15 @@ const CartItem = ({ item }) => {
       {/* Image du produit */}
 
       <img
-        src={`${host}file/${item?.PhotoRessource?.img_res?.replace(
-          "uploads/img/",
-          ""
-        )}`}
+        src={item?.img_res}
         alt={item.titre}
         className="w-20 h-20 object-cover rounded-lg shadow-md"
       />
       <div className="flex-1">
         {/* Nom du produit */}
-        <h3 className="text-lg font-semibold text-gray-800">{item.titre}</h3>
+        <h3 className="text-lg font-semibold text-gray-800">{item?.titre}</h3>
         {/* Prix unitaire */}
-        <p className="text-gray-600 text-sm">{item.prix} fcfa</p>
+        <p className="text-gray-600 text-sm">{item?.prix} fcfa</p>
       </div>
 
       {/* Contrôle de la quantité */}

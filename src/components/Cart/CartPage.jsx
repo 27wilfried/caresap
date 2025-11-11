@@ -18,10 +18,7 @@ const CartPage = () => {
   const dispatch = useDispatch();
   const montant = useSelector(selectCartTotalAmount);
 
-  if (cartItems.length === 0) {
-    return <EmptyCart />;
-  }
-
+  
   const updateQteRessource = (product, qte) => {
     dispatch(UPDATE_QUANTITY({ product, qte: Number(qte) }));
     dispatch(CALCULATE_SUBTOTAL());
@@ -37,6 +34,10 @@ const CartPage = () => {
     dispatch(CALCULATE_SUBTOTAL());
     dispatch(CALCULATE_TOTAL_QUANTITY());
   }, [cartItems]);
+  
+  if (cartItems.length === 0) {
+    return <EmptyCart />;
+  }
 
   return (
     <div className="container mx-auto px-4 py-12">
@@ -54,11 +55,8 @@ const CartPage = () => {
               >
                 {/* Image du produit */}
                 <img
-                  src={`${host}file/${item?.PhotoRessource?.img_res?.replace(
-                    "uploads/img/",
-                    ""
-                  )}`}
-                  alt={item.titre}
+                  src={item?.img_res}
+                  alt={item?.titre}
                   className="w-20 h-20 object-cover rounded-lg shadow-md"
                 />
                 <div className="flex-1">
@@ -67,7 +65,7 @@ const CartPage = () => {
                     {item.titre}
                   </h3>
                   {/* Prix unitaire */}
-                  <p className="text-gray-600 text-sm">{item.prix} fcfa</p>
+                  <p className="text-gray-600 text-sm">{item?.prix} fcfa</p>
                 </div>
 
                 {/* Contrôle de la quantité */}

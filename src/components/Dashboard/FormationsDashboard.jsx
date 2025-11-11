@@ -37,9 +37,6 @@ const FormationsDashboard = () => {
   const selectedCollection = collections.find(
     (c) => c.id_col === selectedCollectionId
   );
-  // const productsForSelectedCollection = products.filter(
-  //   (p) => p.collectionId === selectedCollectionId
-  // );
 
   const renderContent = () => {
 
@@ -110,7 +107,7 @@ const FormationsDashboard = () => {
     if (currentView === "products" && selectedCollection) {
       return (
         <ProductsList
-          products={selectedCollection?.Ressources}
+          products={selectedCollection?.ressources}
           collection={selectedCollection}
           onBack={handleBackToCollections}
           onEdit={setEditingItem}

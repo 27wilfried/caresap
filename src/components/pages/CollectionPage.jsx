@@ -20,11 +20,12 @@ const CollectionPage = () => {
     (col) => col.id_col === parseInt(id_col)
   );
   const FilteredCollections = useSelector(selectFilteredCollections);
+  
   const resultsFilteredCollections =
     sort == "latest" ? collection : FilteredCollections;
   useEffect(() => {
     dispatch(SORT_RESSOURCES({ collections: collection, sort }));
-  }, [dispatch, collection?.Ressources?.length, sort]);
+  }, [dispatch, collection?.ressources?.length, sort]);
 
   const addToCart = (ressource) => {
     dispatch(ADD_TO_CART(ressource));
@@ -81,8 +82,8 @@ const CollectionPage = () => {
             </Link>
 
             <div className="text-sm text-gray-500">
-              {resultsFilteredCollections[0]?.Ressources?.length} ressource
-              {resultsFilteredCollections[0]?.Ressources?.length > 1 ? "s" : ""}
+              {resultsFilteredCollections[0]?.ressources?.length} ressource
+              {resultsFilteredCollections[0]?.ressources?.length > 1 ? "s" : ""}
             </div>
           </div>
         </div>
@@ -94,10 +95,7 @@ const CollectionPage = () => {
           <div className="text-center max-w-4xl mx-auto mb-16">
             <div className="inline-flex flex-col items-center space-y-3 mb-6">
               <img
-                src={`${host}file/${resultsFilteredCollections[0]?.PhotoCollections[0]?.img_col?.replace(
-                  "uploads/img/",
-                  ""
-                )}`}
+                src={resultsFilteredCollections[0]?.img_col}
                 alt={resultsFilteredCollections[0]?.titre}
                 className="w-20 h-20 rounded-2xl object-cover shadow-lg"
               />
@@ -127,18 +125,15 @@ const CollectionPage = () => {
 
         {/* Grille d'articles */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {resultsFilteredCollections[0]?.Ressources?.length > 0 &&
-            resultsFilteredCollections[0]?.Ressources.map((item, index) => (
+          {resultsFilteredCollections[0]?.ressources?.length > 0 &&
+            resultsFilteredCollections[0]?.ressources.map((item, index) => (
               <div
                 key={index}
                 className="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-100 hover:border-gray-200 transform hover:-translate-y-1"
               >
                 <div className="relative h-48 overflow-hidden">
                   <img
-                    src={`${host}file/${item?.PhotoRessource?.img_res?.replace(
-                      "uploads/img/",
-                      ""
-                    )}`}
+                    src={item?.img_res}
                     alt={item.titre}
                     className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
@@ -188,7 +183,7 @@ const CollectionPage = () => {
                 </div>
               </div>
             ))}
-          {collection?.Ressources?.length === 0 && (
+          {collection?.ressources?.length === 0 && (
             <div className="text-center mt-8">
               <p className="text-gray-600">
                 Aucune ressource disponible pour cette collection.

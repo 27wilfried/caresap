@@ -33,8 +33,8 @@ const BlogPage = () => {
   const uniquePub = [];
   const seen = new Set();
   publications.forEach((pub) => {
-    const id = pub?.CategoriePub?.id_cat;
-    const nom = pub?.CategoriePub?.nom;
+    const id = pub?.id_cat;
+    const nom = pub?.categorie_nom;
     if (id && !seen.has(id)) {
       uniquePub.push({ id_cat: id, nom });
       seen.add(id);
@@ -110,10 +110,7 @@ const BlogPage = () => {
                   >
                     <div className="relative h-56 overflow-hidden">
                       <img
-                        src={`${host}file/${post?.PhotoPub?.img_pub?.replace(
-                          "uploads/img/",
-                          ""
-                        )}`}
+                        src={post?.img_pub}
                         alt={post?.titre}
                         className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
                       />
@@ -121,7 +118,7 @@ const BlogPage = () => {
                     </div>
                     <div className="p-6 md:p-8">
                       <p className="text-sm font-semibold text-primary mb-2">
-                        {post.CategoriePub?.nom}
+                        {post.categorie_nom}
                       </p>
                       <h3 className="text-2xl font-bold text-gray-900 leading-tight group-hover:text-primary transition-colors duration-300">
                         <Link to={`/blog/${post?.id_pub}`}>{post?.titre}</Link>

@@ -23,13 +23,13 @@ const ReviewForm = () => {
     pays: "",
     text: "",
     nbre_etoil: "",
-    photos: "",
+    img_avis: "",
   });
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setFormData((prev) => ({ ...prev, photos: file }));
+      setFormData((prev) => ({ ...prev, img_avis: file }));
     }
   };
 
@@ -38,9 +38,9 @@ const ReviewForm = () => {
     for (const key in data) {
       if (data[key] !== undefined && data[key] !== null && key !== "id_pub") {
         // Pour le champ photos, on n'ajoute que si c'est un File
-        if (key === "photos" && typeof data[key] !== "string") {
+        if (key === "img_avis" && typeof data[key] !== "string") {
           formData.append(key, data[key]);
-        } else if (key !== "photos") {
+        } else if (key !== "img_avis") {
           formData.append(key, data[key]);
         }
       }
@@ -60,7 +60,7 @@ const ReviewForm = () => {
       !formData.nbre_etoil ||
       !formData.nbre_etoil === 0 ||
       !formData.text ||
-      !formData.photos
+      !formData.img_avis
     ) {
       toast.current?.show({
         severity: "warn",
@@ -77,11 +77,12 @@ const ReviewForm = () => {
     try {
       let retour;
 
-      retour = await createData("private/avis", formDataToSend, {
+      retour = await createData("private/avis/", formDataToSend, {
         headers: {
           authorization: `Bearer ${token}`,
         },
       });
+      
       toast.current.show({
         severity: "success",
         summary: "Succès",
@@ -96,7 +97,7 @@ const ReviewForm = () => {
         pays: "",
         text: "",
         nbre_etoil: "",
-        photos: "",
+        img_avis: "",
       });
       setLoading(false);
       setSubmitted(false);
@@ -202,15 +203,15 @@ const ReviewForm = () => {
         {/* Champ pour l'image */}
         <div>
           <label
-            htmlFor="photos"
+            htmlFor="img_avis"
             className="block text-sm font-medium text-gray-700"
           >
             Photo
           </label>
           <input
             type="file"
-            id="photos"
-            name="photos"
+            id="img_avis"
+            name="img_avis"
             onChange={handleImageChange}
             className="mt-1 block w-full text-sm text-gray-500
                        file:mr-4 file:py-2 file:px-4
@@ -220,14 +221,14 @@ const ReviewForm = () => {
                        hover:file:bg-blue-100"
           />
         </div>
-        {submitted && formData.photos === "" && (
+        {submitted && formData.img_avis === "" && (
           <span className="text-red-500 text-xs">
             Veuillez sélectionner une image
           </span>
         )}
-        {formData.photos !== "" && (
+        {formData.img_avis !== "" && (
           <img
-            src={URL.createObjectURL(formData.photos)}
+            src={URL.createObjectURL(formData.img_avis)}
             alt="Aperçu"
             className="mt-3 w-full h-48 object-cover rounded-lg"
           />

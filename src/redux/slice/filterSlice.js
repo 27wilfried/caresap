@@ -15,13 +15,13 @@ const filterSlice = createSlice({
       const tempCollections = collections
         .map((col) => ({
           ...col,
-          Ressources: col.Ressources.filter(
+          ressources: col.ressources.filter(
             (res) =>
               res?.titre?.toLowerCase().includes(search?.toLowerCase()) ||
               res?.desc?.toLowerCase().includes(search?.toLowerCase())
           ),
         }))
-        .filter((col) => col.Ressources.length > 0); // supprime collections vides
+        .filter((col) => col.ressources.length > 0); // supprime collections vides
 
       state.filteredCollections = tempCollections;
     },
@@ -31,7 +31,7 @@ const filterSlice = createSlice({
       const { collections, sort } = action.payload;
 
       const tempCollections = collections?.map((col) => {
-        let sortedRessources = [...col.Ressources];
+        let sortedRessources = [...col.ressources];
 
         if (sort === "lowest-price") {
           sortedRessources.sort((a, b) => a.prix - b.prix);
@@ -44,7 +44,7 @@ const filterSlice = createSlice({
         }
         // "latest" => on garde l’ordre naturel
 
-        return { ...col, Ressources: sortedRessources };
+        return { ...col, ressources: sortedRessources };
       });
 
       state.filteredCollections = tempCollections;
@@ -71,11 +71,11 @@ const filterSlice = createSlice({
       const tempCollections = collections
         .map((col) => ({
           ...col,
-          Ressources: col.Ressources.filter(
+          ressources: col.ressources.filter(
             (res) => res.prix >= price.min && res.prix <= price.max
           ),
         }))
-        .filter((col) => col.Ressources.length > 0);
+        .filter((col) => col.ressources.length > 0);
 
       state.filteredCollections = tempCollections;
     },

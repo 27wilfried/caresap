@@ -48,10 +48,11 @@ const Register = () => {
     }
 
     try {
-      const client = await createData("private/client/finalize-register", {
+      const client = await createData("finalize-register/", {
         email,
         password,
       });
+ 
       toast.current.show({
         severity: "success",
         summary: "Succès",
@@ -65,7 +66,6 @@ const Register = () => {
         severity: "error",
         summary: "Erreur",
         detail:
-          error?.data?.message ||
           error?.response?.data?.message ||
           "Erreur lors de la création du compte.",
         life: 3000,
@@ -89,11 +89,12 @@ const Register = () => {
       return;
     }
     try {
-      const client = await createData("private/client/pre-register", {
+      const client = await createData("pre-register/", {
         nom: nom + " " + prenom,
         email,
         contact,
       });
+      
       toast.current.show({
         severity: "success",
         summary: "Succès",
@@ -108,7 +109,6 @@ const Register = () => {
         severity: "error",
         summary: "Erreur",
         detail:
-          error?.data?.message ||
           error?.response?.data?.message ||
           "Erreur lors de la pré-inscription.",
         life: 3000,
@@ -133,10 +133,11 @@ const Register = () => {
       return;
     }
     try {
-      const client = await createData("private/client/verify-code", {
+      const client = await createData("verify-code/", {
         email,
         code,
       });
+    
       toast.current.show({
         severity: "success",
         summary: "Succès",
@@ -150,7 +151,6 @@ const Register = () => {
         severity: "error",
         summary: "Erreur",
         detail:
-          error?.data?.message ||
           error?.response?.data?.message ||
           "Erreur lors de la validation du code.",
         life: 3000,
@@ -209,7 +209,7 @@ const Register = () => {
         </button>
       );
   };
-
+  // tchegounsossou@gmail.com
   const fonctionEnCours = (e) => {
     if (isLogin === 1) return preRegister(e);
     if (isLogin === 2) return verifyCode(e);
